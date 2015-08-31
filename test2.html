@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <!--<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no;"/>-->
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/snap.svg.js"></script>
+    <title>mycharts</title>
+    <style>
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
+        a{text-decoration:none;color: inherit;}
+        img{border: 0;vertical-align: middle;}
+
+        html{font-size: 10px;}
+        body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;-webkit-user-select:none;}
+
+
+    </style>
+</head>
+<body>
+
+<svg id="svg" viewBox="0 0 640 480" style="margin: 0 auto;display: block;">
+
+</svg>
+
+
+
+
+</body>
+
+<script type="text/javascript">
+    var svg = Snap("#svg");
+    // 圈圈
+    var c1 = svg.paper.circle(0, 0, 3);
+
+    var mask=svg.paper.mask();
+
+    // 三角
+    var p1 = svg.paper.path("M2,2 L2,11 L10,6 L2,2").attr({
+        fill: "#000"
+    });
+
+    // 变身标记
+    var m1 = c1.marker(0, 0, 81, 18, 0, 0), m2 = p1.marker(0, 0, 10, 13, -20, 6);
+
+    // 添加一个路径
+    var p2 = svg.paper.path("M10,10 L150,10 L150,90").attr({
+        // 描边
+        stroke: "#00f",
+        strokeWidth: 1,
+        fill: "none",
+        // 起始标记
+        markerStart: m1,
+        // 结束标记
+        "marker-end": m2
+    });
+
+    var c2 = svg.paper.circle(100, 10, 8);
+    c2.attr({
+        fill: "#ff0"
+    });
+
+    p2.attr({
+        mask: c2
+    });
+</script>
+</html>
+
+
+
+
