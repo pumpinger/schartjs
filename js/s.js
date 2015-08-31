@@ -1,4 +1,6 @@
 
+
+//123
 var s={
     isPc:false,
     isHome:false,
