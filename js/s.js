@@ -1,5 +1,27 @@
 
 
+var ss=(function(dom,type,data,option){
+
+    this._init=function(svg,data,nodataStr){
+        alert(1);
+
+    };
+    var  cc= function (){
+        alert(1);
+    };
+    this.bb=321;
+    return {
+        aa:dom,
+        dd:function (){
+            cc();
+        }
+    };
+
+
+})(1,2,3,4);
+
+
+
 //123
 var s={
     isPc:false,
