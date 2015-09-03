@@ -6,9 +6,25 @@
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <script type="text/javascript" src="./js/require.js"></script>
     <script type="text/javascript" src="./js/jquery.min.js"></script>
-    <script type="text/javascript" src="./js/snap.svg.js"></script>
-    <script type="text/javascript" src="./js/s.js"></script>
+    <script>
+        require.config({
+            baseUrl: "js",
+            paths: {
+                "jquery": "jquery.min",
+                "snap": "snap.svg",
+                "schart": "schart"
+            }
+//            shim: {
+//                'schart': {
+//                    deps: ['snap', 'jquery'],
+//                    exports: 's'
+//                }
+//            }
+        });
+
+    </script>
     <title>mycharts</title>
     <style>
         body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
@@ -17,8 +33,6 @@
 
         html{font-size: 10px;}
         body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;-webkit-user-select:none;}
-
-
 
 
         text {
@@ -59,10 +73,37 @@
 
 </body>
 <script type="text/javascript">
-var svgnodataurl1='./js/stats_tips_nodate.png';
-function chartSuccess(){
 
-}
+    var svgnodataurl1='./js/stats_tips_nodate.png';
+    function chartSuccess(){
+
+    }
+
+
+
+//    require(['jquery'], function ($){
+//        $(function (){
+//            alert(1);
+//        });
+//    });
+
+require(['schart'], function (s){
+    console.time('ss');
+        s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+    console.timeEnd('ss');
+
+
+
+//    s.drawColumn("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//        s.drawLoop("#svg1",data9);
+
+
+});
+
+
 
 
 function fullScreen(){
@@ -75,14 +116,7 @@ function fullScreen(){
     });
 }
 
-$(function(){
-//        s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//    s.drawColumn("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawLoop("#svg1",data9);
-});
+
 
 var data9=['1','0'];
 
