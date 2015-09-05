@@ -74,7 +74,7 @@
 </body>
 <script type="text/javascript">
 
-    var svgnodataurl1='./js/stats_tips_nodate.png';
+    var svgnodataurl='./js/stats_tips_nodate.png';
     function chartSuccess(){
 
     }
@@ -88,9 +88,16 @@
 //    });
 
 require(['schart'], function (s){
-    console.time('ss');
-        s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-    console.timeEnd('ss');
+//    console.time('ss');
+
+
+
+//    s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+    s.drawProgress("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+
+
+
+//    console.timeEnd('ss');
 
 
 

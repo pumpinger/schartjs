@@ -2,6 +2,6 @@
 >moblie charts js by svg
 
 
-````js
-alert('~');
-````
+* touchEvent
+* tip
+* fluency
