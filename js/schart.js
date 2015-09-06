@@ -34,6 +34,39 @@
 //ko.abc("msg");
 
 
+/**
+ *
+ * 图形种类
+ * =============
+ * 条形图   bar
+ * bar Progress
+ *
+ * 数据超出屏幕
+ *
+ *
+ * =============
+ * 柱状图 cloum
+ * column mixavg
+ *
+ * 数据单独一个svg
+ * 数据超出屏幕
+ * 全屏后只延长数据
+ *
+ *
+ *================
+ * 扇形图
+ * pie  Loop
+ *
+ * 没有背景
+ *
+ *
+ * ==============
+ * 折线图
+ * line
+ *
+ *
+ *
+ */
 
 
 define(['snap', 'jquery'], function (snap, $) {
@@ -1212,7 +1245,8 @@ define(['snap', 'jquery'], function (snap, $) {
                 }
 
                     if (dataFix) {
-                        data[i].price = data[i].num;
+                        data[i].k1.price = data[i].k1.num;
+                        data[i].k2.price = data[i].k2.num;
                     }
 
 
@@ -1586,7 +1620,7 @@ define(['snap', 'jquery'], function (snap, $) {
             //没有name  就是 k2
             //有层级  才会有parent
             if (name) {
-                var text = barSvg.text(bl, iscompre ? bn * cpery + 24 : bn * cpery + 16, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
+                var text = barSvg.text(bl,  bn * cpery + 16, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
                     fill: fontColor,
                     fontSize: 12
                 });
@@ -1602,7 +1636,7 @@ define(['snap', 'jquery'], function (snap, $) {
             }
 
 
-            var rect = barSvg.rect(bl, name ? bn * cpery + 8 : bn * cpery + cpery / 2 + 1, getDataX(v), 10).attr({
+            var rect = barSvg.rect(bl, bn * cpery + 5, getDataX(v), 10).attr({
                 fill: name ? color : '#f5a25c'
             });
             bars.add(rect);
@@ -1623,47 +1657,10 @@ define(['snap', 'jquery'], function (snap, $) {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
 
-                if (islayer) {
-                    var childn = 0;
-                    $.each(item.item, function (j, v) {
-
-                        if (iscompre) {
-                            drawDoubleBar(v, i);
-                        } else {
-                            drawOneBar(v.price, v.name, i);
-                        }
-
-                        childn++;
-                        bn++;
-                    });
-
-                    if (childn > 1) {
-                        var lefttext = barSvg.text(cl, (bn - childn) * cpery + childn * cpery / 2 + 6, childn > 2 ? _formatName(item.name, 5) : _formatName(item.name, 4)).attr({
-                            fill: fontColor,
-                            fontSize: 10
-                        });
-                        lefttext.attr({
-                            x: cl - lefttext.getBBox().width / 2
-                        });
-                        lefttext.transform('roate(-90)');
-                        bars.add(lefttext);
-                    }
-                    var line = barSvg.line(cl, bn * cpery, bl - 4, bn * cpery).attr({
-                        stroke: fontColor,
-                        strokeDasharray: "5 2",
-                        strokeWidth: 1
-                    });
-                    bars.add(line);
-
-
-                } else {
-                    if (iscompre) {
                         drawDoubleBar(item);
-                    } else {
-                        drawOneBar(item.price, item.name);
-                    }
+
                     bn++;
-                }
+
             }
         }
 
@@ -2194,11 +2191,45 @@ define(['snap', 'jquery'], function (snap, $) {
 
 
             for (var i = 0; i < data.length; i++) {
+                if (islayer) {
+                    var childn = 0;
+                    $.each(data[i].item, function (j, item) {
+                        if (iscompre) {
+                            drawDoubleColumn(item, i);
+                        } else {
+                            drawOneColumn(item.price, item.name, i);
+                        }
+                        cn++;
+                        childn++;
+                    });
 
+                    if (childn > 1) {
+                        var parenttext = columnSvg.text(cn * cperx, vh - ct - 2, _formatName(data[i].name, 6)).attr({
+                            fill: fontColor,
+                            fontSize: 10
+                        });
+//                        console.log(parenttext.node.getComputedTextLength());
+                        parenttext.attr({
+                            x: (cn - childn) * cperx + (childn * cperx - parenttext.getBBox().width) / 2
+                        });
+                        columns.add(parenttext);
+                    }
+                    var line = columnSvg.line(cn * cperx, cb - ct + 2, cn * cperx, vh - ct - 1).attr({
+                        stroke: fontColor,
+                        strokeDasharray: "5 2",
+                        strokeWidth: 1
+                    });
+                    columns.add(line);
+
+                } else {
+                    if (iscompre) {
                         drawDoubleColumn(data[i]);
+                    } else {
+                        drawOneColumn(data[i].price, data[i].name);
 
+                    }
                     cn++;
-
+                }
 
             }
         }
@@ -3408,7 +3439,7 @@ define(['snap', 'jquery'], function (snap, $) {
         drawColumn: drawColumn,
         drawPie: drawPie,
         drawLoop: drawLoop,
-        drawProgress: drawProgress
+        drawMixAvg: drawMixAvg,
     };
 
 });
