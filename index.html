@@ -93,13 +93,13 @@ require(['schart'], function (s){
 
 
 //    s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//    var cc=s.drawProgress("#svg1",data6,title6,function(data){
-//        if(data){
-//            $('#abtext').hide();
-//        }else{
-//            $('#abtext').show();
-//        }
-//    });
+    var cc=s.drawProgress("#svg1",data6,title6,function(data){
+        if(data){
+            $('#abtext').hide();
+        }else{
+            $('#abtext').show();
+        }
+    });
 
 
 
@@ -110,7 +110,7 @@ require(['schart'], function (s){
 
 
 //    s.drawColumn("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
 //        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
 //        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
 //        s.drawLoop("#svg1",data9);

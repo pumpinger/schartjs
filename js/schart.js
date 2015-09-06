@@ -1487,82 +1487,11 @@ define(['snap', 'jquery'], function (snap, $) {
         }
 
         function bindEvent() {
-
-            if (isPc) {
-                svg.mousedown(function (e) {
-                    touchy = e.clientY + $(document).scrollTop() - $(svg.node).offset().top;
-                    touchy = touchy / 1.4;
-                    if (touchy > ct && touchy < cb) {
-                        touchtime = setTimeout(function () {
-                            //svg.unmousemove(); // ↑
-                            var cury = touchy - ct - beforey;   //  点击的元素的高度
-                            var index = Math.floor(cury / cpery);
-                            if (index >= 0 && index < bn) {
-                                drawTip(index);
-                            }
-
-                        }, 100);
-
-                        svg.mousemove(function (e) {
-
-                            var y = e.clientY + $(document).scrollTop() - $(svg.node).offset().top;
-                            y = y / 1.4;
-                            if (y - touchy != 0) {
-                                fideTip(); //  ↓
-                                clearTimeout(touchtime);
-                            }
-                            moveBars(y, e);
-
-                        });
-
-                    }
-
-                });
-
-                svg.mouseup(function (e) {
-                    svg.unmousemove();
-                    fideTip();
-                    clearTimeout(touchtime);
-
-                    beforey = transy;
-                });
-
-                $(dom).mouseleave(function () {
-                    svg.unmousemove();
-                });
-
-
-            } else {
                 svg.touchstart(function (e) {
                     touchy = e.touches[0].clientY;
                     var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
                     if (svgy > ct && svgy < cb) {
 
-                        touchtime = setTimeout(function () {
-                            svg.untouchmove(); // ↑
-                            var cury = svgy - ct - beforey;   //  点击的元素的高度
-                            var index = Math.floor(cury / cpery);
-                            if (index >= 0 && index < bn) {
-                                drawTip(index);
-                            }
-
-                            svg.touchmove(function (e) {
-                                e.preventDefault();
-                                touchy = e.touches[0].clientY;
-                                var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
-                                if (svgy > ct && svgy < cb) {
-                                    var cury = svgy - ct - beforey;   //  点击的元素的高度
-                                    var index = Math.floor(cury / cpery);
-                                    var lastIndex = $('.svgbartip').attr('svgbartipid');
-                                    if (index >= 0 && index < bn && lastIndex != index) {
-                                        fideTip();
-                                        drawTip(index);
-                                    }
-                                }
-                            });
-
-
-                        }, 100);
 
 
                         svg.touchmove(function (e) {
@@ -1589,7 +1518,7 @@ define(['snap', 'jquery'], function (snap, $) {
 
                     beforey = transy;
                 });
-            }
+
 
 
         }
@@ -3440,6 +3369,7 @@ define(['snap', 'jquery'], function (snap, $) {
         drawPie: drawPie,
         drawLoop: drawLoop,
         drawMixAvg: drawMixAvg,
+        drawProgress: drawProgress
     };
 
 });
