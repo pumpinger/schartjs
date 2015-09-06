@@ -34,6 +34,45 @@
 //ko.abc("msg");
 
 
+/**
+ * 2.0 todo list
+ *
+ *
+ *
+ * 属性
+ * ==================
+ * type string 图表类型
+ * is_full bool 是否全屏
+ * data object 数据
+ * data.legend array 图例
+ * data.avg int 平均线
+ * data.item array 每一个数据
+ * data.item.name string 每一个数据的名字
+ * data.item.compare array 每一个数据的对比数据
+ * data.item.num|data.item.compare.num string 每一个数据的值
+ * data.item.extra|data.item.compare.extra string 每一个数据附带的信息
+ * msg string|array 无数据提示语
+ *
+ *
+ * 事件
+ * ==================
+ * onFinish   图像绘制好之后
+ *
+ *
+ *
+ * 方法
+ * ===================
+ * drawTip  画tip
+ * clear  清除图像
+ *
+
+ *
+ *
+ *
+ *
+ */
+
+
 define(['snap', 'jquery'], function (snap, $) {
     var isPc = false;
     var isHome = false;
@@ -1147,6 +1186,8 @@ define(['snap', 'jquery'], function (snap, $) {
         }
 
     }
+
+
     function drawProgress(dom, data, legend, fun, option, nodataStr) {
 
         var svg = Snap(dom);
@@ -1179,16 +1220,15 @@ define(['snap', 'jquery'], function (snap, $) {
             }
 
 
-            iscompre = legend.length == 2 ? true : false;
-            islayer = data[0].item != undefined ? true : false;
+            iscompre = true;
+            islayer =false;
 
-            if (!iscompre && !islayer) {
-                if (data[0].price == undefined) {
+
                     dataFix = true;
-                }
-            }
 
-            cpery = iscompre ? 37 : 26;
+
+
+            cpery =  26;
 
             initData();  //取前100
 
@@ -1197,7 +1237,7 @@ define(['snap', 'jquery'], function (snap, $) {
         function initData() {
             //取最大值
             //算左边边距
-            //大于100阶段
+            //大于100截断
             //为0 除去
 
             var n = 0;
@@ -1207,30 +1247,7 @@ define(['snap', 'jquery'], function (snap, $) {
                     data.splice(i, data.length - i);
                     break;
                 }
-                if (islayer) {
-                    for (var j = 0; j < data[i].item.length; j++) {
-                        var item = data[i].item[j];
-                        var temp = dealData(item, max);
-                        if (temp) {
-                            max = temp;
 
-                            if (bl < 84) {
-                                var longs = (item.name.toString().length + 1) * 13 + 6 > 84 ? 84 : (item.name.toString().length + 1) * 13 + 6;
-                                bl = bl < longs ? longs : bl;
-                            }
-
-                        } else {
-                            data[i].item.splice(j, 1);
-                            j--;
-                        }
-
-                        n++;
-                    }
-                    if (!data[i].item.length) {
-                        data.splice(i, 1);
-                        i--;
-                    }
-                } else {
                     if (dataFix) {
                         data[i].price = data[i].num;
                     }
@@ -1250,7 +1267,7 @@ define(['snap', 'jquery'], function (snap, $) {
                     }
                     n++;
                 }
-            }
+
             if (!data.length) {
                 console.log('s:' + n + '条数据全是0');
                 return _errImage(svg);

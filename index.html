@@ -93,7 +93,16 @@ require(['schart'], function (s){
 
 
 //    s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-    s.drawProgress("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+    var cc=s.drawProgress("#svg1",data6,title6,function(data){
+        if(data){
+            $('#abtext').hide();
+        }else{
+            $('#abtext').show();
+        }
+    });
+
+    console.log(cc);
+
 
 
 
