@@ -1,11 +1,11 @@
 # schartjs
 >moblie charts js by svg
 
- ## 2.0 todo list
+## 2.0 todo list
 
  
 ###属性
- ==================
+==================
  * type string 图表类型
  * is_full bool 是否全屏
  * data object 数据
@@ -18,19 +18,14 @@
  * data.item.extra|data.item.compare.extra string 每一个数据附带的信息
  * msg string|array 无数据提示语    
 
- ###事件
- ==================
+###事件
+==================
  * onFinish   图像绘制好之后
 
 ###方法
 ===================
  * drawTip  画tip
  * clear  清除图像
- *
- 
- *
- *
- *
  
  
 ## feature
