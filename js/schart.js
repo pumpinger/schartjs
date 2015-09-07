@@ -69,6 +69,7 @@
  */
 
 
+
 define(['snap', 'jquery'], function (snap, $) {
     var isPc = false;
     var isHome = false;
@@ -1220,8 +1221,7 @@ define(['snap', 'jquery'], function (snap, $) {
             islayer =false;
 
 
-                    dataFix = true;
-
+            dataFix = true;
 
 
             cpery =  26;
@@ -1545,37 +1545,42 @@ define(['snap', 'jquery'], function (snap, $) {
 
         }
 
-        function drawOneBar(v, name, parent) {
-            //没有name  就是 k2
-            //有层级  才会有parent
-            if (name) {
-                var text = barSvg.text(bl,  bn * cpery + 16, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
+        function drawOneBar(v,v2, name) {
+
+                var text = barSvg.text(bl,  bn * cpery + 14, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
                     fill: fontColor,
                     fontSize: 12
                 });
                 text.attr('x', bl - text.getBBox().width - 4);
                 bars.add(text);
-            }
+
+                var textProgeress = barSvg.text(bl+getDataX(v),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
+                    fill: fontColor,
+                    fontSize: 12
+                });
+                bars.add(textProgeress);
+
+
 
             var color;
             if (parent % 2 && !islayer) {
-                color = "#88bf57"; //绿色
+                color = "#000000"; //绿色
             } else {
-                color = "#7cb7ef"; //蓝色
+                color = "#aaaaaa"; //蓝色
             }
 
 
-            var rect = barSvg.rect(bl, bn * cpery + 5, getDataX(v), 10).attr({
-                fill: name ? color : '#f5a25c'
+            var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v), 10).attr({
+                fill:  color
             });
             bars.add(rect);
+            var rect2 = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
+                fill: '#f5a25c'
+            });
+            bars.add(rect2);
 
         }
 
-        function drawDoubleBar(v, parent) {
-            drawOneBar(v.k1.price, v.name, parent);
-            drawOneBar(v.k2.price, false, parent);
-        }
 
         function drawDataBar() {
             barSvg = svg.svg(0, ct, vw, cb - ct);
@@ -1586,7 +1591,7 @@ define(['snap', 'jquery'], function (snap, $) {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
 
-                        drawDoubleBar(item);
+                    drawOneBar(item.k1.price,item.k2.price, item.name);
 
                     bn++;
 
@@ -1604,6 +1609,7 @@ define(['snap', 'jquery'], function (snap, $) {
 
     function drawColumn(dom, data, legend, fun, option, nodataStr) {
         var svg = Snap(dom);
+
         var columnSvg, columnl, cn;  //column 的坐标系 column 左边距离 column的数量
 
         var vw = _getParam(option, 'vw', $(dom).width()), vh = _getParam(option, 'vh', $(dom).height());  //viwebox 宽高
