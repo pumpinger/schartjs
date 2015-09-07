@@ -69,6 +69,7 @@
  */
 
 
+
 define(['snap', 'jquery'], function (snap, $) {
     var isPc = false;
     var isHome = false;
@@ -1563,9 +1564,9 @@ define(['snap', 'jquery'], function (snap, $) {
 
             var color;
             if (parent % 2 && !islayer) {
-                color = "#88bf57"; //绿色
+                color = "#000000"; //绿色
             } else {
-                color = "#7cb7ef"; //蓝色
+                color = "#aaaaaa"; //蓝色
             }
 
 
@@ -1608,6 +1609,7 @@ define(['snap', 'jquery'], function (snap, $) {
 
     function drawColumn(dom, data, legend, fun, option, nodataStr) {
         var svg = Snap(dom);
+
         var columnSvg, columnl, cn;  //column 的坐标系 column 左边距离 column的数量
 
         var vw = _getParam(option, 'vw', $(dom).width()), vh = _getParam(option, 'vh', $(dom).height());  //viwebox 宽高
