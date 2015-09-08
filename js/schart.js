@@ -47,7 +47,7 @@
         define(['snap', 'jquery'], factory);
     } else {
          // [3] No module loader (plain <script> tag) - put directly in global namespace
-        factory(snap,$);
+        factory(Snap,$);
     }
 })(function (snap, $) {
     var isPc = false;
