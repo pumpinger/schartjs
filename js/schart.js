@@ -1540,11 +1540,11 @@
 
 
             var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v), 10).attr({
-                fill:  '#88bf57'
+                fill:  '#d9d9d9'
             });
             bars.add(rect);
             var rect2 = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
-                fill: '#f5a25c'
+                fill: '#88bf57'
             });
             bars.add(rect2);
 
