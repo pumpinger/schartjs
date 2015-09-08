@@ -1,34 +1,4 @@
-//!function(factory) {
-//
-//    //factory是一个函数，下面的koExports就是他的参数
-//
-//    // Support three module loading scenarios
-//    if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
-//        // [1] CommonJS/Node.js
-//        // [1] 支持在module.exports.abc,或者直接exports.abc
-//        var target = module['exports'] || exports; // module.exports is for Node.js
-//        factory(target);
-//    } else if (typeof define === 'function' && define['amd']) {
-//        // [2] AMD anonymous module
-//        // [2] AMD 规范
-//        //define(['exports'],function(exports){
-//        //    exports.abc = function(){}
-//        //});
-//        define(['exports'], factory);
-//    } else {
-//        // [3] No module loader (plain <script> tag) - put directly in global namespace
-//        factory(window['ko'] = {});
-//    }
-//}(function(koExports){
-//
-//    //ko的全局定义 koExports是undefined 对应着上面的[3] 这种情况
-//    var ko = typeof koExports !== 'undefined' ? koExports : {};
-//
-//    //定义一个ko的方法
-//    ko.abc = function(s){
-//        alert(s);
-//    }
-//});
+
 //
 ////[3]中情况的调用
 //ko.abc("msg");
@@ -69,8 +39,17 @@
  */
 
 
+;(function(factory) {
 
-define(['snap', 'jquery'], function (snap, $) {
+     if (typeof define === 'function' && define['amd']) {
+        // [2] AMD anonymous module
+        // [2] AMD 规范
+        define(['snap', 'jquery'], factory);
+    } else {
+         // [3] No module loader (plain <script> tag) - put directly in global namespace
+        factory(snap,$);
+    }
+})(function (snap, $) {
     var isPc = false;
     var isHome = false;
     var fontColor = '#b0b0b0';
@@ -1186,8 +1165,7 @@ define(['snap', 'jquery'], function (snap, $) {
 
 
     function drawProgress(dom, data, legend, fun, option, nodataStr) {
-
-        var svg = Snap(dom);
+        var svg = snap(dom);
         var barSvg, bl = 0, bn;  //bar 的坐标系  b的数量
 
         var vw = _getParam(option, 'vw', $(dom).width()), vh = _getParam(option, 'vh', $(dom).height());  //viwebox 宽高
@@ -1244,26 +1222,26 @@ define(['snap', 'jquery'], function (snap, $) {
                     break;
                 }
 
-                    if (dataFix) {
-                        data[i].k1.price = data[i].k1.num;
-                        data[i].k2.price = data[i].k2.num;
-                    }
-
-
-                    var temp = dealData(data[i], max);
-                    if (temp) {
-                        max = temp;
-
-                        if (bl < 84) {
-                            var longs = data[i].name.toString().length * 13 + 6 > 84 ? 84 : data[i].name.toString().length * 13 + 6;
-                            bl = bl < longs ? longs : bl;
-                        }
-                    } else {
-                        data.splice(i, 1);
-                        i--;
-                    }
-                    n++;
+                if (dataFix) {
+                    data[i].k1.price = data[i].k1.num;
+                    data[i].k2.price = data[i].k2.num;
                 }
+
+
+                var temp = dealData(data[i], max);
+                if (temp) {
+                    max = temp;
+
+                    if (bl < 84) {
+                        var longs = data[i].name.toString().length * 13 + 6 > 84 ? 84 : data[i].name.toString().length * 13 + 6;
+                        bl = bl < longs ? longs : bl;
+                    }
+                } else {
+                    data.splice(i, 1);
+                    i--;
+                }
+                n++;
+            }
 
             if (!data.length) {
                 console.log('s:' + n + '条数据全是0');
@@ -1487,37 +1465,37 @@ define(['snap', 'jquery'], function (snap, $) {
         }
 
         function bindEvent() {
-                svg.touchstart(function (e) {
-                    touchy = e.touches[0].clientY;
-                    var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
-                    if (svgy > ct && svgy < cb) {
+            svg.touchstart(function (e) {
+                touchy = e.touches[0].clientY;
+                var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
+                if (svgy > ct && svgy < cb) {
 
 
 
-                        svg.touchmove(function (e) {
-                            clearTimeout(touchtime);
+                    svg.touchmove(function (e) {
+                        clearTimeout(touchtime);
 
-                            if (isfull) {
-                                e.preventDefault();
-                                var y = e.touches[0].clientY;
-                                moveBars(y, e);
-                            }
+                        if (isfull) {
+                            e.preventDefault();
+                            var y = e.touches[0].clientY;
+                            moveBars(y, e);
+                        }
 
-                        });
+                    });
 
-                    }
+                }
 
-                });
-
-
-                svg.touchend(function (e) {
-                    svg.untouchmove();
-                    fideTip();
-                    clearTimeout(touchtime);
+            });
 
 
-                    beforey = transy;
-                });
+            svg.touchend(function (e) {
+                svg.untouchmove();
+                fideTip();
+                clearTimeout(touchtime);
+
+
+                beforey = transy;
+            });
 
 
 
@@ -1547,18 +1525,18 @@ define(['snap', 'jquery'], function (snap, $) {
 
         function drawOneBar(v,v2, name) {
 
-                var text = barSvg.text(bl,  bn * cpery + 14, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
-                    fill: fontColor,
-                    fontSize: 12
-                });
-                text.attr('x', bl - text.getBBox().width - 4);
-                bars.add(text);
+            var text = barSvg.text(bl,  bn * cpery + 14, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
+                fill: fontColor,
+                fontSize: 12
+            });
+            text.attr('x', bl - text.getBBox().width - 4);
+            bars.add(text);
 
-                var textProgeress = barSvg.text(bl+getDataX(v),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
-                    fill: fontColor,
-                    fontSize: 12
-                });
-                bars.add(textProgeress);
+            var textProgeress = barSvg.text(bl+getDataX(v),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
+                fill: fontColor,
+                fontSize: 12
+            });
+            bars.add(textProgeress);
 
 
 
@@ -1591,9 +1569,9 @@ define(['snap', 'jquery'], function (snap, $) {
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
 
-                    drawOneBar(item.k1.price,item.k2.price, item.name);
+                drawOneBar(item.k1.price,item.k2.price, item.name);
 
-                    bn++;
+                bn++;
 
             }
         }
@@ -3379,5 +3357,7 @@ define(['snap', 'jquery'], function (snap, $) {
     };
 
 });
+
+
 
 
