@@ -1539,9 +1539,6 @@
             bars.add(textProgeress);
 
 
-
-            alert(1);
-
             var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v), 10).attr({
                 fill:  '#88bf57'
             });
