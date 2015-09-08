@@ -1165,7 +1165,7 @@
 
 
     function drawProgress(dom, data, legend, fun, option, nodataStr) {
-        var svg = snap(dom);
+        var svg = Snap(dom);
         var barSvg, bl = 0, bn;  //bar 的坐标系  b的数量
 
         var vw = _getParam(option, 'vw', $(dom).width()), vh = _getParam(option, 'vh', $(dom).height());  //viwebox 宽高
@@ -1539,21 +1539,12 @@
             bars.add(textProgeress);
 
 
-
-            var color;
-            if (parent % 2 && !islayer) {
-                color = "#000000"; //绿色
-            } else {
-                color = "#aaaaaa"; //蓝色
-            }
-
-
             var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v), 10).attr({
-                fill:  color
+                fill:  '#d9d9d9'
             });
             bars.add(rect);
             var rect2 = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
-                fill: '#f5a25c'
+                fill: '#88bf57'
             });
             bars.add(rect2);
 
