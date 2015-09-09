@@ -48,8 +48,8 @@
     } else {
          // [3] No module loader (plain <script> tag) - put directly in global namespace
         s=factory(Snap,$);
-         //~~
-         ~~~~
+         //~~ ~~~
+
     }
 })(function (snap, $) {
     var isPc = false;
