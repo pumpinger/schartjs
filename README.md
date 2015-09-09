@@ -17,6 +17,7 @@
  * data.item.num|data.item.compare.num string 每一个数据的值
  * data.item.extra|data.item.compare.extra string 每一个数据附带的信息
  * msg string|array 无数据提示语    
+ * img string 无数据图片    
 
 ###事件
 =======

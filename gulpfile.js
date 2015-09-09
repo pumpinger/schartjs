@@ -10,7 +10,7 @@ gulp.task('default', function() {
 
 gulp.task('jsmin', function () {
     gulp.src("js/schart.js")
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(concat('all.js'))
         .pipe(gulp.dest("dest/"));
 });
