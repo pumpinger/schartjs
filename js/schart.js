@@ -38,15 +38,14 @@
  *
  */
 
-
 ;(function(factory) {
 
-     if (typeof define === 'function' && define['amd']) {
+    if (typeof define === 'function' && define['amd']) {
         // [2] AMD anonymous module
         // [2] AMD 规范
         define(['snap', 'jquery'], factory);
     } else {
-         // [3] No module loader (plain <script> tag) - put directly in global namespace
+        // [3] No module loader (plain <script> tag) - put directly in global namespace
         s=factory(Snap,$);
 
     }
@@ -1278,167 +1277,6 @@
         }
 
 
-        //todo  先计算pointx y 和画一条线
-        function drawOneTip(index, tipdata, k2data) {
-            if (tipdata) {
-                var poionty = index * cpery + cpery / 2 + ct + beforey;
-                var poiontx;
-                if (!iscompre) {
-                    poiontx = getDataX(tipdata.price) + bl + 8;
-                } else {
-                    if (parseFloat(tipdata.price) > parseFloat(k2data.price)) {
-                        poiontx = getDataX(tipdata.price) + bl + 8;
-                    } else {
-                        poiontx = getDataX(k2data.price) + bl + 8;
-                    }
-
-                }
-
-
-                var tipLine = svg.line(poiontx, poionty, poiontx, tb).attr({
-                    stroke: "#d2d2d2",
-                    strokeWidth: 2.5
-                });
-                var tipcircel = svg.circle(poiontx, poionty, 3).attr({
-                    stroke: "#47a8ef",
-                    strokeWidth: 3,
-                    fill: "#fff"
-                });
-
-
-                var rect = svg.paper.rect(poiontx, tt, 100, tb - tt, 4).attr({
-                    fill: "#47a8ef"
-                });
-
-
-                if (!dataFix) {
-                    var text = svg.paper.text(poiontx, tb - (tb - tt - 14) / 2, [legend[0] + ':　', "￥", _formatMoney(tipdata.price) + "　", tipdata.num, "笔"]).attr({
-                        fill: "#fff",
-                        fontSize: 14
-                    });
-
-                    text.select("tspan:nth-child(2)").attr({
-                        fontSize: 8
-                    });
-                    text.select("tspan:nth-child(5)").attr({
-                        fontSize: 8
-                    });
-                } else {
-                    var text = svg.paper.text(poiontx, tb - (tb - tt - 14) / 2, [legend[0] + ':　', tipdata.num + '次', ""]).attr({
-                        fill: "#fff",
-                        fontSize: 14
-                    });
-
-                    text.select("tspan:nth-child(3)").attr({
-                        fontSize: 8
-                    });
-
-                }
-
-
-                var textw = text.getBBox().width;
-                var rectw = textw + 20;
-                var rectleft = poiontx - rectw / 2;
-
-
-                if (rectleft < 0) {
-                    rectleft = 0;
-                } else if (rectleft > vw - rectw) {
-                    rectleft = vw - rectw;
-                }
-
-                rect.attr({
-                    width: rectw,
-                    x: rectleft
-                });
-                text.attr({
-                    x: (rectw - textw) / 2 + rectleft
-                });
-
-                var tip = svg.paper.g();
-                tip.attr('class', "svgbartip");
-                tip.attr('svgbartipid', index);
-                tip.add(rect, text, tipLine, tipcircel);
-
-
-                if (k2data) {
-                    var rect2 = svg.paper.rect(poiontx, tb + 1, 100, tb - tt, 4).attr({
-                        fill: "#f5a25c"
-                    });
-
-                    var text2 = svg.paper.text(poiontx, 2 * tb - tt - (tb - tt - 14) / 2, [legend[1] + ':　', "￥", _formatMoney(k2data.price) + "　", k2data.num, "笔"]).attr({
-                        fill: "#fff",
-                        fontSize: 14
-                    });
-
-                    text2.select("tspan:nth-child(2)").attr({
-                        fontSize: 8
-                    });
-                    text2.select("tspan:nth-child(5)").attr({
-                        fontSize: 8
-                    });
-
-                    var textw2 = text2.getBBox().width;
-                    var rectw2 = textw2 + 20;
-                    var rectleft2 = poiontx - rectw2 / 2;
-
-
-                    if (rectleft2 < 0) {
-                        rectleft2 = 0;
-                    } else if (rectleft2 > vw - rectw2) {
-                        rectleft2 = vw - rectw2;
-                    }
-
-                    rect2.attr({
-                        width: rectw2,
-                        x: rectleft2
-                    });
-                    text2.attr({
-                        x: (rectw2 - textw2) / 2 + rectleft2
-                    });
-
-                    tip.add(rect2, text2);
-
-                }
-
-
-            } else {
-                console.log('s:点击到了bar之外的区域');
-            }
-
-        }
-
-
-        function drawTip(index) {
-            if (islayer) {
-                var layer = _getLayer(index, data);
-
-                if (iscompre) {
-
-                    drawOneTip(index, data[layer.parent].item[layer.child].k1, data[layer.parent].item[layer.child].k2);
-
-                } else {
-                    drawOneTip(index, data[layer.parent].item[layer.child]);
-                }
-                fun(data[layer.parent].item[layer.child]);
-                if (isfull) {
-                    drawTitle(data[layer.parent].item[layer.child].name);
-                }
-
-
-            } else {
-                if (iscompre) {
-                    drawOneTip(index, data[index].k1, data[index].k2);
-                } else {
-                    drawOneTip(index, data[index]);
-                }
-                fun(data[index]);
-                if (isfull) {
-                    drawTitle(data[index].name);
-                }
-            }
-
-        }
 
         function drawTitle(name) {
             var text = svg.text(0, tt - 8, name).attr({
@@ -1526,6 +1364,7 @@
 
         function drawOneBar(v,v2, name) {
 
+
             var text = barSvg.text(bl,  bn * cpery + 14, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
                 fill: fontColor,
                 fontSize: 12
@@ -1533,21 +1372,32 @@
             text.attr('x', bl - text.getBBox().width - 4);
             bars.add(text);
 
-            var textProgeress = barSvg.text(bl+getDataX(v),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
+
+            var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
+                fill: '#d9d9d9'
+            });
+            bars.add(rect);
+
+            var rect2 = barSvg.rect(bl,bn * cpery + 5 ,getDataX(v), 10).attr({
+                fill:  '#88bf57'
+            });
+            bars.add(rect2);
+
+
+
+            var textProgeress = barSvg.text(bl+getDataX(v2),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
                 fill: fontColor,
                 fontSize: 12
             });
+
+            var progress=v2/(cline * cperv);
+            if(progress > 0.8 &&  bl + getDataX(v2) + textProgeress.getBBox().width > cr) {
+                textProgeress.attr('x', bl + getDataX(v2) - textProgeress.getBBox().width - 4);
+                textProgeress.attr('fill','#000');
+            }
+
             bars.add(textProgeress);
 
-
-            var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v), 10).attr({
-                fill:  '#d9d9d9'
-            });
-            bars.add(rect);
-            var rect2 = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
-                fill: '#88bf57'
-            });
-            bars.add(rect2);
 
         }
 
@@ -3137,6 +2987,24 @@
         drawBar(dom, data, legend, fun, option, nodataStr);
     }
 
+    function drawFullProgress(dom, data, legend, fun, nodataStr) {
+        var v = _fullScreen(dom);
+        var vw = v.width;
+        var vh = v.height;
+
+
+        var option = {
+            vw: vw,
+            vh: vh - 80,
+            tt: 30,
+            tb: 60,
+            isfull: true
+
+        };
+
+        drawProgress(dom, data, legend, fun, option, nodataStr);
+    }
+
     function drawFullPie(dom, data, legend, fun, nodataStr) {
         var v = _fullScreen(dom);
         var vw = v.width;
@@ -3345,7 +3213,14 @@
         drawPie: drawPie,
         drawLoop: drawLoop,
         drawMixAvg: drawMixAvg,
-        drawProgress: drawProgress
+        drawHomeLine: drawHomeLine,
+        drawProgress: drawProgress,
+        drawFullBar: drawFullBar,
+        drawFullMixAvg: drawFullMixAvg,
+        drawFullPie: drawFullPie,
+        drawFullColumn: drawFullColumn,
+        drawFullProgress: drawFullProgress
+
     };
 
 });
