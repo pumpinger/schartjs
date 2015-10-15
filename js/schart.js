@@ -1374,7 +1374,7 @@
 
 
             var rect = barSvg.rect(bl,bn * cpery + 5 , getDataX(v2), 10).attr({
-                fill: '#d9d9d9'
+                fill: '#e4e4e4'
             });
             bars.add(rect);
 
@@ -1386,8 +1386,8 @@
 
 
             var textProgeress = barSvg.text(bl+getDataX(v2),  bn * cpery + 14, '　('+v+'/'+v2+')').attr({
-                fill: fontColor,
-                fontSize: 12
+                fill: '#a3a3a3',
+                fontSize: 11
             });
 
             var progress=v2/(cline * cperv);
