@@ -15,6 +15,15 @@ gulp.task('jsmin', function () {
         .pipe(gulp.dest("dest/"));
 });
 
+gulp.task('jsmin2', function () {
+    gulp.src("js/test.js")
+        .pipe(uglify())
+        .pipe(concat('all.js'))
+        .pipe(gulp.dest("dest/"));
+});
+
+
+
 gulp.task('watch', function () {
     gulp.watch('js/schart.js', ['jsmin','browser-sync']);
 });

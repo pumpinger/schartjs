@@ -1,43 +1,4 @@
 
-//
-////[3]中情况的调用
-//ko.abc("msg");
-
-
-/**
- *
- * 图形种类
- * =============
- * 条形图   bar
- * bar Progress
- *
- * 数据超出屏幕
- *
- *
- * =============
- * 柱状图 cloum
- * column mixavg
- *
- * 数据单独一个svg
- * 数据超出屏幕
- * 全屏后只延长数据
- *
- *
- *================
- * 扇形图
- * pie  Loop
- *
- * 没有背景
- *
- *
- * ==============
- * 折线图
- * line
- *
- *
- *
- */
-
 ;(function(factory) {
 
     if (typeof define === 'function' && define['amd']) {
@@ -50,6 +11,9 @@
 
     }
 })(function (snap, $) {
+    function draw(dom, opt) {}
+
+
     var isPc = false;
     var isHome = false;
     var fontColor = '#b0b0b0';
@@ -2420,8 +2384,451 @@
         }
     }
 
-    function drawMixAvg(dom, data, legend, fun, option, nodataStr) {
-        {
+    function drawMixAvgNoTip(dom, data, legend, fun, option, nodataStr){
+        var svg = Snap(dom);
+        var columnSvg, columnl, cn;  //column 的坐标系 column 左边距离 column的数量
+
+        var vw = _getParam(option, 'vw', $(dom).width()), vh = _getParam(option, 'vh', $(dom).height());  //viwebox 宽高
+        var tt = _getParam(option, 'tt', 0), tb = _getParam(option, 'tb', 30);  //提示框离头部距离 提示框底部
+        var ct = _getParam(option, 'ct', 2 * (tb - tt) + tt + 10), cb = vh - 25, cl = 10, cr = vw;   //图表区域  top  bottom  left right
+        var cperv, cperx = 42, cline = 5;   //图表纵向每段值val  图表横向每段宽度  图表纵向分几段
+        var beforex = 0, transx = 0, touchx;    //柱形图原来的位移   当前的位移   本次触摸时的位移(相对于svg 不是屏幕宽度)
+        var columns;   //svg.g 所有的条
+        var isfull = _getParam(option, 'isfull', false);
+
+        var touchtime;  //触摸定时器
+        var avg;
+
+
+        beginChart();
+
+        function beginChart() {
+            if (!_init(svg, data, nodataStr)) {
+                return false;
+            }
+
+            if (typeof  fun != "function") {
+                fun = function () {
+                };
+            }
+
+
+            initData();
+        }
+
+
+        function initData() {
+            //取最大值
+            //算左边边距
+            //大于100阶段
+            //为0 除去
+            //平均值是否恒定
+
+            var n = 0;
+            var max = 0;
+
+            if (data.avg != undefined) {
+                avg = data.avg;
+                data = data.item;
+            } else {
+                avg = false;
+            }
+
+
+            for (var i = 0; i < data.length; i++) {
+                if (n >= 100) {
+                    data.splice(i, data.length - i);
+                    break;
+                }
+
+                var temp = dealData(data[i], max);
+                if (temp) {
+                    max = temp;
+                } else {
+                    data.splice(i, 1);
+                    i--;
+                }
+                n++;
+
+            }
+            if (!data.length) {
+                console.log('s:' + n + '条数据num全是0');
+                return _errImage(svg, nodataStr);
+            }
+
+
+            cperv = _getPerV(max, cline);
+
+
+            chartSuccess(dom, 'column');
+            drawBgLine();
+            drawDataColumn();
+            drawDataAvgLine();
+            bindEvent();
+        }
+
+        //todo  可以 放到 _dealData
+        function dealData(v, max) {
+            var newmax;
+
+            if (parseFloat(v.num) == 0) {
+                return false;
+            }
+            newmax = parseFloat(v.num) > max ? parseFloat(v.num) : max;
+            return newmax;
+
+        }
+
+
+        //todo  //todo  先计算pointx y 和花一条线
+        function drawOneTip(index, tipdata) {
+            if (tipdata) {
+                var poiontx = index * cperx + cperx / 2 + columnl + beforex;
+                var poionty = getDataY(tipdata.num) + ct - 8;
+
+                var tipLine = svg.line(poiontx, poionty, poiontx, tb).attr({
+                    stroke: "#d2d2d2",
+                    strokeWidth: 2.5
+                });
+                var tipcircel = svg.circle(poiontx, poionty, 3).attr({
+                    stroke: "#47a8ef",
+                    strokeWidth: 3,
+                    fill: "#fff"
+                });
+
+
+                var rect = svg.paper.rect(poiontx, tt, 100, tb - tt, 4).attr({
+                    fill: "#47a8ef"
+                });
+
+
+                if (avg) {
+                    var str = [legend[0] + ':　', tipdata.num + "次"];
+                } else {
+                    var str = [legend[0] + ':　', tipdata.num + "次　人均:　", tipdata.avg, '次'];
+                }
+                var text = svg.paper.text(poiontx, tb - (tb - tt - 14) / 2, str).attr({
+                    fill: "#fff",
+                    fontSize: 14
+                });
+
+
+                var textw = text.getBBox().width;
+                var rectw = textw + 20;
+                var rectleft = poiontx - rectw / 2;
+
+
+                if (rectleft < 0) {
+                    rectleft = 0;
+                } else if (rectleft > vw - rectw) {
+                    rectleft = vw - rectw;
+                }
+
+                rect.attr({
+                    width: rectw,
+                    x: rectleft
+                });
+                text.attr({
+                    x: (rectw - textw) / 2 + rectleft
+                });
+
+                var tip = svg.paper.g();
+                tip.attr('class', "svgcolumntip");
+                tip.attr('svgcolumntipid', index);
+                tip.add(rect, text, tipLine, tipcircel);
+
+
+            } else {
+                console.log('点击到了bar之外的区域');
+            }
+
+        }
+
+        //todo  考虑放到 _touchData
+        function drawTip(index) {
+            drawOneTip(index, data[index]);
+            fun(data[index]);
+            if (isfull) {
+                drawTitle(data[index].name);
+            }
+        }
+
+
+        function fideTip() {
+            $('.svgcolumntip').remove();
+            fun();
+        }
+
+        function drawTitle(name) {
+            var text = svg.text(0, tt - 8, name).attr({
+                'class': "svgcolumntip",
+                fill: "#1978bc",
+                fontSize: 18
+            });
+            text.attr('x', vw / 2 - text.getBBox().width / 2);
+        }
+
+        function moveColumn(curx, e) {
+            transx = beforex + curx - touchx;
+            if (transx > 0) {
+                transx = 0;
+            } else if (transx < -cperx * (cn + 1) + vw - columnl) {
+                transx = vw - columnl < cperx * (cn + 1) ? -cperx * (cn + 1) + vw - columnl : 0;
+            }
+            columns.transform("translate(" + transx + ",0)");
+
+
+        }
+
+        function bindEvent() {
+
+            if (isPc) {
+
+                svg.mousedown(function (e) {
+                    svg.unmousemove();
+                    touchx = e.clientX + $(document).scrollLeft() - $(svg.node).offset().left;
+                    touchx = ( touchx / $(svg.node).width()) * vw;
+
+
+                    svg.mousemove(function (e) {
+                        var curx = e.clientX + $(document).scrollLeft() - $(svg.node).offset().left;
+                        curx = ( curx / $(svg.node).width()) * vw;
+                        if (curx - touchx != 0) {
+                            fideTip();
+                            clearTimeout(touchtime);
+                        }
+                        moveColumn(curx, e);
+                    });
+
+
+                    svg.mouseup(function (e) {
+                        svg.unmousemove();
+
+                        svg.mousemove(function (e) {
+                            var curx = e.clientX + $(document).scrollLeft() - $(svg.node).offset().left;
+                            curx = ( curx / $(svg.node).width()) * vw;
+
+                            curx = curx - columnl - beforex;
+                            var index = Math.floor(curx / cperx);
+                            var lastIndex = $('.svgcolumntip').attr('svgcolumntipid');
+                            if (index >= 0 && index < cn && lastIndex != index) {
+                                fideTip();
+                                drawTip(index);
+                            }
+                        });
+
+                        beforex = transx;
+                    });
+
+                });
+
+                svg.mousemove(function (e) {
+                    var curx = e.clientX + $(document).scrollLeft() - $(svg.node).offset().left;
+                    curx = ( curx / $(svg.node).width()) * vw;
+
+                    curx = curx - columnl - beforex;
+                    var index = Math.floor(curx / cperx);
+                    var lastIndex = $('.svgcolumntip').attr('svgcolumntipid');
+                    if (index >= 0 && index < cn && lastIndex != index) {
+                        fideTip();
+                        drawTip(index);
+                    }
+                });
+
+                $(dom).mouseleave(function () {
+                    fideTip();
+                });
+
+
+            } else {
+
+                svg.touchstart(function (e) {
+                    touchx = e.touches[0].clientX;
+                    if (isfull) {
+                        touchx = ( touchx / $(svg.node).width()) * vw;
+                    }
+
+                    svg.touchmove(function (e) {
+                        clearTimeout(touchtime);
+                        if (isfull) {
+                            var curx = e.touches[0].clientX;
+
+                            e.preventDefault();
+
+                            curx = ( curx / $(svg.node).width()) * vw;
+                            moveColumn(curx, e);
+
+                        }
+                    });
+                });
+
+
+                svg.touchend(function (e) {
+                    svg.untouchmove();
+                    beforex = transx;
+                });
+
+            }
+        }
+
+
+        function drawBgLine() {
+            columnl = 0;
+            var lineh = (cb - ct) / cline;
+
+            var bgLine = svg.line(cl, cb, cr, cb).attr({
+                stroke: "#e2e2e2",
+                strokeDasharray: "10 2",
+                strokeWidth: 0.5
+            });
+
+            for (var i = 1; i <= cline; i++) {
+                var h = cb - i * lineh;
+
+                bgLine.clone().attr({
+                    x1: cl,
+                    y1: h,
+                    x2: cr,
+                    y2: h
+                });
+
+                var text = svg.text(cl, h + 15, _formatMoney(cperv * i)).attr({
+                    fill: fontColor,
+                    fontSize: 12
+                });
+
+                columnl = text.getBBox().width + cl + 10 > columnl ? text.getBBox().width + cl + 10 : columnl;
+
+            }
+
+
+        }
+
+        function getDataY(val) {
+            if (!val) {
+                val = 0;
+            }
+
+            val = parseFloat(val);
+            return cb - ct - (val / (cperv * cline)) * (cb - ct);
+
+        }
+
+        function drawOneColumn(v, name) {
+
+            var x = cperx * cn;
+            var y = getDataY(v);
+
+            var rect = columnSvg.rect(name ? x + 16 : x + 28, y, 10, cb - ct - y).attr({
+                fill: name ? '#7cb7ef' : '#f5a25c'
+            });
+
+
+            columns.add(rect);
+
+
+            if(name){
+                var value = columnSvg.text(x, y -2, v).attr({
+                    fill: fontColor,
+                    fontSize: 10
+                });
+                value.attr("x", x + (cperx - value.getBBox().width) / 2);
+                columns.add(value);
+            }
+
+
+            //todo
+            name = name.toString();
+            var longs = 6;
+            if (name.length > longs) {
+                name = _formatName(name, longs);
+
+            }
+            if (name.length > longs / 2) {
+                var name1 = name.substr(0, longs / 2);
+                var name2 = name.substr(longs / 2);
+                var text1 = columnSvg.text(x, cb - ct + 11, name1).attr({
+                    fill: fontColor,
+                    fontSize: 10
+                });
+                var text2 = columnSvg.text(x, cb - ct + 22, name2).attr({
+                    fill: fontColor,
+                    fontSize: 10
+                });
+                text1.attr("x", x + (cperx - text1.getBBox().width) / 2);
+                text2.attr("x", x + (cperx - text1.getBBox().width) / 2);
+                columns.add(text1, text2);
+
+            } else {
+                var text = columnSvg.text(x, cb - ct + 11, name).attr({
+                    fill: fontColor,
+                    fontSize: 10
+                });
+                text.attr("x", x + (cperx - text.getBBox().width) / 2);
+                columns.add(text);
+            }
+        }
+
+        function drawDataAvgLine() {
+
+
+            if (avg) {
+
+                var marker = svg.circle(2, 2, 1.2).attr({
+                    stroke: "#f5a25c",
+                    strokeWidth: 1,
+                    fill: "#ffffff"
+                });
+                var makerend = marker.marker(0, 0, 4, 4, 2, 2);
+
+
+                var datapath = 'M' + (columnl + cperx / 5) + ' ' + (getDataY(avg) + ct) + 'L' + (cr - cperx / 5 - 5) + ' ' + (getDataY(avg) + ct);
+                svg.path(datapath).attr({
+                    stroke: "#f5a25c",
+                    strokeWidth: 2.5,
+                    fill: 'none',
+                    strokeLinejoin: 'bevel',
+                    markerEnd: makerend
+                });
+
+
+                var rect = svg.rect(vw, getDataY(avg) + ct - 20 - 13, 0, 17, 10, 10).attr({
+                    fill: "#f5a25c"
+                });
+                var text = svg.text(vw, getDataY(avg) + ct - 20, '人均' + avg + 'Km').attr({
+                    fill: "#ffffff",
+                    fontSize: 12
+                });
+                rect.attr({
+                    x: cr - text.getBBox().width - 15,
+                    width: text.getBBox().width + 10
+                });
+                text.attr({
+                    x: cr - text.getBBox().width - 10
+                });
+
+            }
+        }
+
+        function drawDataColumn() {
+            columnSvg = svg.svg(columnl, ct, vw - columnl, vh - ct);
+            columns = columnSvg.g();
+            cn = 0;
+
+
+            for (var i = 0; i < data.length; i++) {
+                drawOneColumn(data[i].num, data[i].name);
+                cn++;
+            }
+        }
+
+    }
+
+
+
+
+    function drawMixAvg(dom, data, legend, fun, option, nodataStr)
+    {
             var svg = Snap(dom);
             var columnSvg, columnl, cn;  //column 的坐标系 column 左边距离 column的数量
 
@@ -2907,7 +3314,10 @@
             }
 
         }
-    }
+
+
+
+
 
 
     function drawFullColumn(dom, data, legend, fun, nodataStr) {
@@ -3207,15 +3617,19 @@
     }
 
     return {
+        draw: draw,
+
         drawBar: drawBar,
         drawLine: drawLine,
         drawColumn: drawColumn,
         drawPie: drawPie,
         drawLoop: drawLoop,
         drawMixAvg: drawMixAvg,
+        drawMixAvgNoTip: drawMixAvgNoTip,
         drawHomeLine: drawHomeLine,
         drawProgress: drawProgress,
         drawFullBar: drawFullBar,
+        drawFullLine: drawFullLine,
         drawFullMixAvg: drawFullMixAvg,
         drawFullPie: drawFullPie,
         drawFullColumn: drawFullColumn,

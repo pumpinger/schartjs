@@ -94,28 +94,123 @@ require(['schart'], function (s){
 //    console.time('ss');
 
 
-//    s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-    s.drawProgress("#svg1",data6,title6,function(data){
-        if(data){
-            $('#abtext').hide();
-        }else{
-            $('#abtext').show();
-        }
-    });
+
+//    s.drawMixAvgNoTip("#svg1",data10,title10,function(data){});
+//    s.drawMixAvg("#svg1",data10,title10,function(data){});
+    s.drawColumn("#svg1",data5,title5,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//        s.drawLoop("#svg1",data9);
+//        s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+
+
+
+//
+//    s.draw("#svg1",{
+//        type:'column',
+//        is_full:false,
+//        tip:false,
+//        tipMsg:this.num+'Km',
+//        marker:false,
+//        markerMsg:this.num+'Km',
+//        avg:15.5,
+//        avgMsg:this.avg+'Km',
+//        data:[
+//            [
+//                {
+//                    name:'北京',
+//                    num:33
+//                }
+//            ],
+//            [
+//                {
+//                    name:'北京',
+//                    num:33
+//                }
+//            ]
+//        ],
+//        nodata_msg:'呵呵'
+//    });
+
+
+    var extra;
+    var data={
+        type:'column',
+        is_full:false,
+        tip:false,
+        tipMsg:this.num+'Km',
+        marker:false,
+        markerMsg:this.num+'Km',
+        avg:false,
+        avgMsg:this.avg+'Km',
+        data:[
+            {
+                name:'北京',
+                items:[
+                    {
+                        name:"朝阳",
+                        items:[
+                            {
+                                num:33,
+                                extra:extra
+                            },
+                            {
+                                num:33
+                            }
+                        ]
+                    },
+                        {
+                        name:"朝阳2",
+                        items:[
+                            {
+                                num:33
+                            },
+                            {
+                                num:33
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name:'北京',
+                items:[
+                    {
+                        name:"朝阳",
+                        num:33
+                    },
+                    {
+                        name:"朝阳2",
+                        num:33
+                    }
+                ]
+            },
+            {
+                name:'北京',
+                items:[
+                    {
+                        num:33
+                    },
+                    {
+                        num:33
+                    }
+                ]
+            },
+            {
+                name:'北京',
+                num:12
+            }
+        ],
+        nodata_msg:'呵呵'
+    };
+
 
 
 
 
 
 //    console.timeEnd('ss');
-
-
-
-//    s.drawColumn("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawLoop("#svg1",data9);
 
 
 });
@@ -159,15 +254,15 @@ var data10={
 var title11=['今日'];
 var data11=[
     {name:"上海",num:" 9",avg:"2"},
-    {name:"上海",num:" 9",avg:"2"}
-//    {name:"四川",num:"3",avg:"2"},
-//    {name:"广东省",num:"2",avg:"1"},
-//    {name:"云南省",num:"1",avg:"1"},
-//    {name:"辽宁省省",num:"2",avg:"2"},
-//    {name:"黑龙江省",num:"5",avg:"4"},
-//    {name:"湖南省省",num:"10",avg:"9"},
-//    {name:"江西省省",num:"11",avg:"10"},
-//    {name:"上海",num:"3",avg:"2"}
+    {name:"上海",num:" 9",avg:"2"},
+    {name:"四川",num:"3",avg:"2"},
+    {name:"广东省",num:"2",avg:"1"},
+    {name:"云南省",num:"1",avg:"1"},
+    {name:"辽宁省省",num:"2",avg:"2"},
+    {name:"黑龙江省",num:"5",avg:"4"},
+    {name:"湖南省省",num:"10",avg:"9"},
+    {name:"江西省省",num:"11",avg:"10"},
+    {name:"上海",num:"3",avg:"2"}
 ];
 
 //有对比 无层级
@@ -180,7 +275,7 @@ var data6=[
     },{
         name:"北 京",
         k1:{num:"8",price:"60"},
-        k2:{num:"1200000",price:"133"}
+        k2:{num:"12",price:"133"}
     },{
         name:"名字特别名字特别特别",
         k1:{num:"0",price:"34"},
