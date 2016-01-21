@@ -32,18 +32,16 @@
 * touchEvent
 * tip
 * fluency
+* 图形种类
 
- * 图形种类
 =============
  * 条形图   bar
  * bar Progress
- 
  * 数据超出屏幕
 
 =============
  * 柱状图 cloum
  * column mixavg
- 
  * 数据单独一个svg
  * 数据超出屏幕
  * 全屏后只延长数据
@@ -52,7 +50,6 @@
 ===============
  * 扇形图
  * pie  Loop
- 
  * 没有背景
  
  
