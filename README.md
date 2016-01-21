@@ -14,13 +14,13 @@
  * data.item array 每一个数�?
  * data.item.name string 每一个数据的名字
  * data.item.compare array 每一个数据的对比数据
- * data.item.num|data.item.compare.num string 每一个数据的�?
+ * data.item.num|data.item.compare.num string 每一个数据的值
  * data.item.extra|data.item.compare.extra string 每一个数据附带的信息
  * msg string|array 无数据提示语    
 
 ###事件
 =======
- * onFinish   图像绘制好之�?
+ * onFinish   图像绘制好之后
 
 ###方法
 =========
