@@ -4,14 +4,14 @@
 ##todo list
 
  
-###属�??
+###属性
 ======
  * type string 图表类型
  * is_full bool 是否全屏
  * data object 数据
  * data.legend array 图例
- * data.avg int 平均�?
- * data.item array 每一个数�?
+ * data.avg int 平均值
+ * data.item array 每一个数据
  * data.item.name string 每一个数据的名字
  * data.item.compare array 每一个数据的对比数据
  * data.item.num|data.item.compare.num string 每一个数据的值
