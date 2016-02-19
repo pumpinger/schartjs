@@ -10,6 +10,7 @@
  | There are more options than you see here, these are just the ones that are
  | set internally. See the website for more info.
  |
+ |~~~~~
  |
  */
 module.exports = {
