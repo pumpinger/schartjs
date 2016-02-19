@@ -12,8 +12,6 @@
     }
 })(function (snap, $) {
     function draw(dom, opt) {}
-
-
     var isPc = false;
     var isHome = false;
     var fontColor = '#b0b0b0';
@@ -576,8 +574,6 @@
 
     }
 
-
-
     function drawBar(dom, data, legend, fun, option, nodataStr) {
 
         var svg = Snap(dom);
@@ -845,7 +841,6 @@
             }
 
         }
-
 
         function drawTip(index) {
             if (islayer) {
@@ -1126,7 +1121,6 @@
         }
 
     }
-
 
     function drawProgress(dom, data, legend, fun, option, nodataStr) {
         var svg = Snap(dom);
@@ -2824,11 +2818,7 @@
 
     }
 
-
-
-
-    function drawMixAvg(dom, data, legend, fun, option, nodataStr)
-    {
+    function drawMixAvg(dom, data, legend, fun, option, nodataStr) {
             var svg = Snap(dom);
             var columnSvg, columnl, cn;  //column 的坐标系 column 左边距离 column的数量
 
@@ -3315,9 +3305,467 @@
 
         }
 
+    //3条数据，对比，重叠
+    function drawProgress3(dom, data, legend, fun, tip, option, nodataStr) {
+        var svg = Snap(dom);//svg元素
+        var barSvg, bl = 0, bn;  //bar 的坐标系  b的数量
+
+        var vw = _getParam(option, 'vw', $(dom).width());  //viewbox 宽
+        var vh = _getParam(option, 'vh', $(dom).height());  //viewbox 高
+        var tt = _getParam(option, 'tt', 0);   //提示框离头部距离
+        var tb = _getParam(option, 'tb', 30);  //提示框离头部距离 提示框底部
+        var ct = _getParam(option, 'ct', 2 * (tb - tt) + tt + 10), cb = vh - 18, cl = 10, cr = vw - 20;   //图表区域  top  bottom  left right
+        var cperv, cpery, cline = vw < 400 ? 5 : 6;  //图表横向每段值val  图表纵向每段宽度  图表横向分几段
+        var iscompre, islayer;   //是否是对比,是否是2级
+        var beforey = 0, transy = 0, touchy;    //原来的位移   当前的位移   本次触摸时的位移
+        var bars;    //svg.g 所有的条
+        var isfull = _getParam(option, 'isfull', false);
+        var smpdata;   //采样数据
+        var touchtime;  //触摸定时器
+
+        var dataFix = false;//importance 新版本需要另外一种 tip的图，为了修改方便     以前程序不变， 用老字段 存新字段的值 来画图 ， 用该变量 判断花哪一种tip
+
+        beginChart();
+
+        function beginChart() {
+            if (!_init(svg, data, nodataStr)) {
+                return false;
+            }
+            if (typeof  fun != "function") {
+                fun = function () {
+                };
+            }
+
+            iscompre = true;
+            islayer =false;
+            dataFix = true;
+            cpery =  26;
+
+            initData();  //取前100
+        }
+
+        function initData() {
+            //取最大值
+            //算左边边距
+            //大于100截断
+            //为0 除去
+
+            var n = 0;
+            var max = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (n >= 100) {
+                    data.splice(i, data.length - i);
+                    break;
+                }
+
+                if (dataFix) {
+                    data[i].k1.price = data[i].k1.num;
+                    data[i].k2.price = data[i].k2.num;
+                    data[i].k3.price = data[i].k3.num;
+                }
 
 
+                var temp = dealData(data[i], max);
+                if (temp) {
+                    max = temp;
 
+                    if (bl < 84) {
+                        var longs = data[i].name.toString().length * 13 + 6 > 84 ? 84 : data[i].name.toString().length * 13 + 6;
+                        bl = bl < longs ? longs : bl;
+                    }
+                } else {
+                    data.splice(i, 1);
+                    i--;
+                }
+                n++;
+            }
+
+            if (!data.length) {
+                console.log('s:' + n + '条数据全是0');
+                return _errImage(svg);
+            }
+
+            cperv = _getPerV(max, cline);
+
+
+            chartSuccess(dom, 'bar');
+            drawBgLine();
+            drawDataBar();
+            bindEvent();
+
+        }
+
+        function dealData(v, max) {
+            var newmax;
+            if (iscompre) {
+                if (parseFloat(v.k1.price) == 0 && parseFloat(v.k2.price) == 0 && parseFloat(v.k3.price) == 0) {
+                    return false;
+                }
+                newmax = parseFloat(v.k1.price) > max ? parseFloat(v.k1.price) : max;
+                newmax = parseFloat(v.k2.price) > newmax ? parseFloat(v.k2.price) : newmax;
+                if(v.k3){
+                    newmax = parseFloat(v.k2.price) + parseFloat(v.k3.price) > newmax ? parseFloat(v.k2.price) + parseFloat(v.k3.price) : newmax;
+                }
+                return newmax;
+            } else {
+                if (parseFloat(v.price) == 0) {
+                    return false;
+                }
+                newmax = parseFloat(v.price) > max ? parseFloat(v.price) : max;
+                return newmax;
+            }
+        }
+
+        function drawBgLine() {
+
+            var lineh = (cr - bl) / cline;
+
+            for (var i = 0; i <= cline; i++) {
+                var x = bl + i * lineh;
+
+                svg.line(x, cb, x, ct).attr({
+                    stroke: "#e2e2e2",
+                    strokeDasharray: "10 2",
+                    strokeWidth: 0.5
+                });
+
+                var text = svg.text(x, vh - 4, _formatMoney(cperv * i)).attr({
+                    fill: fontColor,
+                    fontSize: 10
+                });
+                text.attr('x', x - text.getBBox().width / 2);
+            }
+
+        }
+
+        function drawOneBar(v,v2,v3,name) {
+            var text = barSvg.text(bl,  bn * cpery + 14, islayer ? _formatName(name, 5) : _formatName(name, 6)).attr({
+                fill: fontColor,
+                fontSize: 12
+            });
+            text.attr('x', bl - text.getBBox().width - 4);
+            bars.add(text);
+
+            var xv = getDataX(v);
+            var xv2 = getDataX(v2);
+            var v4;
+            if(xv > xv2){
+                v4 = parseFloat(v)+parseFloat(v3);
+            }else{
+                v4 = parseFloat(v2)+parseFloat(v3);
+            }
+
+            var xv3 = getDataX(v4);
+
+            var rect = barSvg.rect(bl,bn * cpery + 5 , xv3, 10).attr({
+                fill: '#e4e4e4'
+            });
+            bars.add(rect);
+
+            var rect2 = barSvg.rect(bl,bn * cpery + 5 ,xv2, 10).attr({
+                fill:  '#88bf57'
+            });
+            bars.add(rect2);
+
+            var rect3 = barSvg.rect(bl,bn * cpery + 5 ,xv, 10).attr({
+                fill:  '#31B2E6'
+            });
+            bars.add(rect3);
+
+            var completeness
+            var v5 = parseFloat(v)+parseFloat(v3);
+            if(0!=v2 && parseFloat(v)<=parseFloat(v2)){
+                completeness = Number(Math.round(v5/v2*10000)/100).toFixed(2)+'%';
+            }else if(0==v2 && 0==v){
+                completeness = v5 + '家';
+            }else{
+                console.log("出错了，请检查数据。",'v:' + v, 'v2:' + v2,'v3:' + v3);
+                completeness = '非法数据';
+            }
+
+            var textProgeress = barSvg.text(bl+xv3,  bn * cpery + 14, '　('+completeness+')').attr({
+                fill: '#a3a3a3',
+                fontSize: 11,
+                'class':"completeness"
+            });
+
+            var progress = v4/(cline * cperv);
+            if(progress > 0.8 &&  bl + getDataX(v4) + textProgeress.getBBox().width > cr) {
+                textProgeress.attr('x', bl + getDataX(v4) - textProgeress.getBBox().width - 4);
+                textProgeress.attr('fill','#000');
+            }
+
+            bars.add(textProgeress);
+
+
+        }
+
+        function drawDataBar() {
+            barSvg = svg.svg(0, ct, vw, cb - ct);
+
+            bars = barSvg.g();
+
+            bn = 0;
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                drawOneBar(item.k1.price,item.k2.price,item.k3.price, item.name);
+                bn++;
+            }
+        }
+
+        function getDataX(v) {
+            if (!v) {
+                return 0;
+            }
+            return (parseFloat(v) / (cline * cperv)) * (cr - bl);
+        }
+
+        function bindEvent() {
+            if (isPc) {
+                svg.mousedown(function (e) {
+                    touchy = e.clientY + $(document).scrollTop() - $(svg.node).offset().top;
+                    touchy = touchy / 1.4;
+                    if (touchy > ct && touchy < cb) {
+                        touchtime = setTimeout(function () {
+                            //svg.unmousemove(); // ↑
+                            var cury = touchy - ct - beforey;   //  点击的元素的高度
+                            var index = Math.floor(cury / cpery);
+                            if (index >= 0 && index < bn) {
+                                drawTip(index);
+                            }
+
+                        }, 100);
+
+                        svg.mousemove(function (e) {
+
+                            var y = e.clientY + $(document).scrollTop() - $(svg.node).offset().top;
+                            y = y / 1.4;
+                            if (y - touchy != 0) {
+                                fideTip(); //  ↓
+                                clearTimeout(touchtime);
+                            }
+                            moveBars(y, e);
+
+                        });
+
+                    }
+
+                });
+
+                svg.mouseup(function (e) {
+                    svg.unmousemove();
+                    fideTip();
+                    clearTimeout(touchtime);
+
+                    beforey = transy;
+                });
+
+                $(dom).mouseleave(function () {
+                    svg.unmousemove();
+                });
+
+
+            } else {
+                svg.touchstart(function (e) {
+                    touchy = e.touches[0].clientY;
+                    var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
+                    if (svgy > ct && svgy < cb) {
+
+                        touchtime = setTimeout(function () {
+                            svg.untouchmove(); // ↑
+                            var cury = svgy - ct - beforey;   //  点击的元素的高度
+                            var index = Math.floor(cury / cpery);
+                            if (index >= 0 && index < bn) {
+                                drawTip(index);
+                            }
+
+                            svg.touchmove(function (e) {
+                                e.preventDefault();
+                                touchy = e.touches[0].clientY;
+                                var svgy = touchy + $(document).scrollTop() - svg.node.offsetTop;  //点在svg 上的y
+                                if (svgy > ct && svgy < cb) {
+                                    var cury = svgy - ct - beforey;   //  点击的元素的高度
+                                    var index = Math.floor(cury / cpery);
+                                    var lastIndex = $('.svgbartip').attr('svgbartipid');
+                                    if (index >= 0 && index < bn && lastIndex != index) {
+                                        fideTip();
+                                        drawTip(index);
+                                    }
+                                }
+                            });
+
+
+                        }, 100);
+
+
+                        svg.touchmove(function (e) {
+                            clearTimeout(touchtime);
+
+                            if (isfull) {
+                                e.preventDefault();
+                                var y = e.touches[0].clientY;
+                                moveBars(y, e);
+                            }
+
+                        });
+
+                    }
+
+                });
+
+
+                svg.touchend(function (e) {
+                    svg.untouchmove();
+                    fideTip();
+                    clearTimeout(touchtime);
+
+
+                    beforey = transy;
+                });
+            }
+
+
+        }
+
+        function moveBars(cury, e) {
+            transy = beforey + cury - touchy;
+            if (transy > 0) {
+                transy = 0;
+            } else if (transy < -cpery * (bn + 1) + (cb - ct)) {
+                transy = cb - ct < cpery * (bn + 1) ? -cpery * (bn + 1) + (cb - ct) : 0;
+            }
+
+            bars.transform("translate(0," + transy + ")");
+        }
+
+        //todo  先计算pointx y 和画一条线
+        function drawOneTip(index, tipdata, k2data, k3data) {
+            if (tipdata) {
+                var poionty = index * cpery + cpery / 2 + ct + beforey-3;
+                var poiontx;
+                if (!iscompre) {
+                    poiontx = getDataX(tipdata.price) + bl + 8;
+                }else if(parseFloat(tipdata.price)>parseFloat(k2data.price)) {
+                    poiontx = getDataX(tipdata.price)+ getDataX(k3data.price) + bl + 8;
+                }else{
+                    poiontx = getDataX(k2data.price)+ getDataX(k3data.price) + bl + 8;
+                }
+
+                var tipLine = svg.line(poiontx, poionty, poiontx, tb).attr({
+                    stroke: "#d2d2d2",
+                    strokeWidth: 2.5
+                });
+                var tipcircel = svg.circle(poiontx, poionty, 3).attr({
+                    stroke: "#47a8ef",
+                    strokeWidth: 3,
+                    fill: "#fff"
+                });
+
+
+                var rect = svg.paper.rect(poiontx, tt, 100, tb - tt, 4).attr({
+                    fill: "#47a8ef"
+                });
+
+
+                if (!dataFix) {
+                    var text = svg.paper.text(poiontx, tb - (tb - tt - 14) / 2, [legend[0] + ':　', "￥", _formatMoney(tipdata.price) + "　", tipdata.num, "笔"]).attr({
+                        fill: "#fff",
+                        fontSize: 14
+                    });
+
+                    text.select("tspan:nth-child(2)").attr({
+                        fontSize: 8
+                    });
+                    text.select("tspan:nth-child(5)").attr({
+                        fontSize: 8
+                    });
+                } else {
+                    var text = svg.paper.text(poiontx, tb - (tb - tt - 14) / 2, '已完成计划 ' + tipdata.num + ' 家/计划 ' + k2data.num + ' 家，计划外 ' + k3data.num + ' 家').attr({
+                        fill: "#fff",
+                        fontSize: 14
+                    });
+
+                }
+
+                var textw = text.getBBox().width;
+                var rectw = textw + 20;
+                var rectleft = poiontx - rectw / 2;
+
+
+                if (rectleft < 0) {
+                    rectleft = 0;
+                } else if (rectleft > vw - rectw) {
+                    rectleft = vw - rectw;
+                }
+
+                rect.attr({
+                    width: rectw,
+                    x: rectleft
+                });
+                text.attr({
+                    x: (rectw - textw) / 2 + rectleft
+                });
+
+                var tip = svg.paper.g();
+                tip.attr('class', "svgbartip");
+                tip.attr('svgbartipid', index);
+                tip.add(rect, text, tipLine, tipcircel);
+
+            } else {
+                console.log('s:点击到了bar之外的区域');
+            }
+
+        }
+
+        function drawTip(index) {
+            if (tip){
+                if (islayer) {
+                    var layer = _getLayer(index, data);
+
+                    if (iscompre) {
+
+                        drawOneTip(index, data[layer.parent].item[layer.child].k1, data[layer.parent].item[layer.child].k2, data[layer.parent].item[layer.child].k3);
+
+                    } else {
+                        drawOneTip(index, data[layer.parent].item[layer.child]);
+                    }
+                    fun(data[layer.parent].item[layer.child]);
+                    if (isfull) {
+                        drawTitle(data[layer.parent].item[layer.child].name);
+                    }
+
+
+                } else {
+                    if (iscompre) {
+                        drawOneTip(index, data[index].k1, data[index].k2, data[index].k3);
+                    } else {
+                        drawOneTip(index, data[index]);
+                    }
+                    fun(data[index]);
+                    if (isfull) {
+                        drawTitle(data[index].name);
+                    }
+                }
+                $('.completeness').hide();
+            }
+        }
+
+        function drawTitle(name) {
+            var text = svg.text(0, tt - 8, name).attr({
+                'class': "svgbartip",
+                fill: "#1978bc",
+                fontSize: 18
+            });
+            text.attr('x', vw / 2 - text.getBBox().width / 2);
+        }
+
+        function fideTip() {
+            $('.svgbartip').remove();
+            $('.completeness').show();
+            fun();
+        }
+
+    }
 
 
     function drawFullColumn(dom, data, legend, fun, nodataStr) {
@@ -3628,6 +4076,7 @@
         drawMixAvgNoTip: drawMixAvgNoTip,
         drawHomeLine: drawHomeLine,
         drawProgress: drawProgress,
+        drawProgress3: drawProgress3,
         drawFullBar: drawFullBar,
         drawFullLine: drawFullLine,
         drawFullMixAvg: drawFullMixAvg,
@@ -3638,7 +4087,6 @@
     };
 
 });
-
 
 
 

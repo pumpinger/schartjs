@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <script type="text/javascript" src="./js/require.js"></script>
-    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="./js/jquery.min.js"></script>-->
     <!--<script type="text/javascript" src="./js/snap.svg.js"></script>-->
     <!--<script type="text/javascript" src="./js/schart.js"></script>-->
     <script>
@@ -31,7 +31,7 @@
     <style>
         body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
         a{text-decoration:none;color: inherit;}
-        img{border: 0;vertical-align: middle;}
+        img{border: 0;vertical-align: middle;color: #bada55}
 
         html{font-size: 10px;}
         body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;-webkit-user-select:none;}
@@ -55,6 +55,18 @@
 
 
 <svg id="svg1" height="300px" width="100%" >
+
+</svg>
+<svg id="svg3" height="300px" width="100%" >
+
+</svg>
+<svg id="svg4" height="300px" width="100%" >
+
+</svg>
+<svg id="svg5" height="300px" width="100%" >
+
+</svg>
+<svg id="svg6" height="300px" width="100%" >
 
 </svg>
 1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
@@ -92,19 +104,33 @@
 
 require(['schart'], function (s){
 //    console.time('ss');
-
-
-
 //    s.drawMixAvgNoTip("#svg1",data10,title10,function(data){});
-//    s.drawMixAvg("#svg1",data10,title10,function(data){});
-    s.drawColumn("#svg1",data5,title5,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+    s.drawMixAvg("#svg6",data10,title10,function(data){});
+    s.drawColumn("#svg5",data5,title5,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
 //    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//        s.drawLine("#svg1",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
-//        s.drawLoop("#svg1",data9);
-//        s.drawBar("#svg1",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-
-
+//    s.drawLine("#svg6",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//    s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+//    s.drawLoop("#svg5",data9);
+    s.drawBar("#svg4",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+//    s.drawProgress("#svg1",data6,title6,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
+    s.drawProgress3("#svg1",data66,title66,function(data){
+        if(data){
+            console.log("if");
+            console.log(data);
+        }else{
+            console.log("else");
+            console.log(data);
+        }
+    },true);
+    s.drawProgress3("#svg3",data66,title66,function(data){
+        if(data){
+            console.log("if");
+            console.log(data);
+        }else{
+            console.log("else");
+            console.log(data);
+        }
+    },true);
 
 //
 //    s.draw("#svg1",{
@@ -206,10 +232,6 @@ require(['schart'], function (s){
     };
 
 
-
-
-
-
 //    console.timeEnd('ss');
 
 
@@ -288,6 +310,83 @@ var data6=[
         name:"北京",
         k1:{num:"5",price:"3"},
         k2:{num:"5",price:"123"}
+    }
+];
+
+
+//有对比 无层级 三条
+var title66=['本月','上月'];
+var data66=[
+    {
+        name:"天津",
+        k1:{num:"2",price:"2351"},
+        k2:{num:"10",price:"1234.3"},
+        k3:{num:"1",price:"6234.3"}
+    },{
+        name:"北 京",
+        k1:{num:"3",price:"60"},
+        k2:{num:"11",price:"133"},
+        k3:{num:"2",price:"633"}
+    },{
+        name:"名字特别名字特别特别",
+        k1:{num:"4",price:"34"},
+        k2:{num:"12",price:"1234"},
+        k3:{num:"3",price:"6234"}
+    },{
+        name:"名字特别",
+        k1:{num:"5",price:"123"},
+        k2:{num:"13",price:"4354.3"},
+        k3:{num:"2",price:"6354.3"}
+    },{
+        name:"北京",
+        k1:{num:"6",price:"3"},
+        k2:{num:"14",price:"123"},
+        k3:{num:"1",price:"623"}
+    },{
+        name:"成都",
+        k1:{num:"0",price:"3"},
+        k2:{num:"6",price:"123"},
+        k3:{num:"1",price:"623"}
+    },{
+        name:"成都2",
+        k1:{num:"2",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"2",price:"623"}
+    },{
+        name:"成都3",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"3",price:"623"}
+    },{
+        name:"成都4",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"4",price:"623"}
+    },{
+        name:"成都5",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"5",price:"623"}
+    },{
+        name:"成都6",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"6",price:"623"}
+    },{
+        name:"成都7",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"7",price:"623"}
+    },{
+        name:"成都8",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"8",price:"623"}
+    },{
+        name:"成都9",
+        k1:{num:"0",price:"3"},
+        k2:{num:"0",price:"123"},
+        k3:{num:"9",price:"623"}
     }
 ];
 
