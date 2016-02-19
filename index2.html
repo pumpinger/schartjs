@@ -1,33 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <title>schart</title>
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <script type="text/javascript" src="./js/jquery.min.js"></script>
-    <!--<script type="text/javascript" src="./js/snap.svg.min.js"></script>-->
-    <!--<script type="text/javascript" src="./js/s.min.js"></script>-->
-    <!--<script src="js/svg.js" data-path="js" data-debug="true"></script>-->
-    <title>mycharts</title>
+    <script type="text/javascript" src="./js/require.js"></script>
+    <!--<script type="text/javascript" src="./js/jquery.min.js"></script>-->
+    <!--<script type="text/javascript" src="./js/snap.svg.js"></script>-->
+    <!--<script type="text/javascript" src="./js/schart.js"></script>-->
+    <script>
+        require.config({
+            baseUrl: "js",
+            paths: {
+                "jquery": "jquery.min",
+                "snap": "snap.svg",
+                "schart": "schart2"
+            },
+            shim: {
+                'schart2': {
+                    deps: ['snap', 'jquery'],
+                    exports: 'schart'
+                }
+            }
+        });
+        require(['jquery', 'snap', 'schart']);
+    </script>
+
     <style>
-        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;-webkit-user-select:none;}
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
         a{text-decoration:none;color: inherit;}
-        img{border: 0;vertical-align: middle;}
+        img{border: 0;vertical-align: middle;color: #bada55}
 
         html{font-size: 10px;}
-        body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;}
+        body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;-webkit-user-select:none;}
 
+
+        text {
+            /*text-anchor: middle;*/
+            /*pointer-events: auto; */
+        }
     </style>
 </head>
 <body>
+<?php echo 111;?>
+<!--<div style="font-size: 24px;position: absolute;text-align: center;width: 100%;" id="abtext">这里是筛选</div>-->
+
+<!--<svg id="svg1" viewBox="0 0 0 240">-->
+
+<!--<svg id="svg1" height="250px" width="100%" style="background-color: #2e83d6">-->
+
+<!--<svg id="svg1" height="400px" width="100%" viewBox="0 0 850 200" preserveAspectRatio="xMidYMid none">-->
+
+
+<svg id="svg1" height="300px" width="100%" >
+
+</svg>
+<svg id="svg3" height="300px" width="100%" >
+
+</svg>
+<svg id="svg4" height="300px" width="100%" >
+
+</svg>
+<svg id="svg5" height="300px" width="100%" >
+
+</svg>
+1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
+
+<div id='ccc' style="margin: 20px 0 0 0;position: static;">
+    <svg id="svg2" height="300px" width="100%" >
+
+    </svg>
+</div>
+
+
+
+
+<div class="glob" style="text-align: center;" id="2">
+    <button ontouchstart="fullScreen()">全屏</button>
+</div>
+
 
 
 </body>
-<script>
-    $('body').load('test.html');
 
+<script type="text/javascript">
+    var svgnodataurl='./js/stats_tips_nodate.png';
 
+    require(['jquery', 'snap', 'schart'], function ($, Snap, sChart){
 
+        var option={
+            type:'ha',
+            is_full:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            svg:"#svg1",
+            data:[
+                {
+                    name:'北京',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                                {
+                                    num:33,
+                                },
+                                {
+                                    num:33
+                                }
+                            ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:33
+                                },
+                                {
+                                    num:33
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'北京',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:33
+                        },
+                        {
+                            name:"朝阳2",
+                            num:33
+                        }
+                    ]
+                },
+                {
+                    name:'北京',
+                    items:[
+                        {
+                            num:33
+                        },
+                        {
+                            num:33
+                        }
+                    ]
+                },
+                {
+                    name:'北京',
+                    num:12
+                }
+            ],
+            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        var option2={
+            type:'line',
+            isFull:false,
+            isHome:false,
+            isCompare:true,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            svg:"#svg3",
+            data:[
+                {
+                    name:'北京',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                                {
+                                    num:2,
+                                },
+                                {
+                                    num:3
+                                }
+                            ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:4
+                                },
+                                {
+                                    num:5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'上海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广州',
+                    items:[
+                        {
+                            num:8
+                        },
+                        {
+                            num:9
+                        }
+                    ]
+                },
+                {
+                    name:'深圳',
+                    items:[
+                        {
+                            num:10
+                        },
+                        {
+                            num:11
+                        }
+                    ]
+                },
+                {
+                    name:'成都',
+                    items:[
+                        {
+                            num:12
+                        },
+                        {
+                            num:13
+                        }
+                    ]
+                }
+            ],
+            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        function drawInfo(info){
+            console.log("callback:",info);
+        }
+        sChartDraw(option,drawInfo);
+        sChartDraw(option2,drawInfo);
+
+        var svgsnap = snap("#svg4")
+    });
 </script>
+
 </html>

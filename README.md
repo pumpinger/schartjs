@@ -1,10 +1,10 @@
 # schartjs
 >moblie charts js by svg
 
-##todo list
+## todo list
 
  
-###属性
+### 属性
 ======
  * type string 图表类型
  * is_full bool 是否全屏
@@ -18,36 +18,37 @@
  * data.item.extra|data.item.compare.extra string 每一个数据附带的信息
  * msg string|array 无数据提示语    
 
-###事件
+### 事件
 =======
  * onFinish   图像绘制好之后
 
-###方法
+### 方法
 =========
  * drawTip  画tip
  * clear  清除图像
  
  
 ## feature
+
 * touchEvent
 * tip
 * fluency
 * 图形种类
 
-=============
+==============
  * 条形图   bar
  * bar Progress
  * 数据超出屏幕
 
-=============
+==============
  * 柱状图 cloum
- * column mixavg
+ * column mixavg(单独一个方法)
  * 数据单独一个svg
  * 数据超出屏幕
  * 全屏后只延长数据
  
  
-===============
+==============
  * 扇形图
  * pie  Loop
  * 没有背景
