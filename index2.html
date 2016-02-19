@@ -257,7 +257,15 @@
         sChartDraw(option,drawInfo);
         sChartDraw(option2,drawInfo);
 
-        var svgsnap = snap("#svg4")
+        var svgsnap = Snap("#svg4");
+        var svga = svgsnap.paper.circle(50, 50, 40).attr({
+            fill: "#fc0",
+            stroke: "#000",
+            strokeWidth: 2,     // 驼峰命名...
+            "fill-opacity": 0.5 // 或者短横符连接名称
+        });
+
+        console.log(svga);
     });
 </script>
 

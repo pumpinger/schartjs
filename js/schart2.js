@@ -38,7 +38,7 @@
             chartLeft:0,
             chartRight:0,
             chartTop:0,
-            chartBottom:0
+            chartBottom:0,
         };//svg画图数据
 
         //计算画图信息
@@ -80,12 +80,12 @@
             svgData.tipHeight = svgData.tipBottom - svgData.tipTop;
 
             //坐标系
-            svgData.xAixs = ['周一','周二','周三','周四','周五','周六','周日'];
+            svgData.xAixs = [];
             svgData.xAixsLength = 0;//x轴长度
             svgData.xAixsPer = 0;//x轴每段值
 
 
-            svgData.yAixs = ['100','200','300','400','500','600','700'];
+            svgData.yAixs = [];
             svgData.yAixsLength = 0;//y轴长度
             svgData.yAixsPer= 0;//y轴每段值
 
@@ -96,6 +96,18 @@
             svgData.chartBottom =  svgData.viewboxHeight - 23;
         }
 
+        function getAixs(){
+            var aixs = [];
+            for(var i in option.data){
+                aixs.push(i.name);
+            }
+            return aixs;
+        }
+
+        function setAixs(){
+            var aixs = [];
+
+        }
         function getMax(abc){
             var max=0;
             for (var a in abc){
@@ -742,6 +754,8 @@
 
         //画Tip
         function drawTip(){}
+        //清除Tip
+        function fadeTip(){}
 
 
 
