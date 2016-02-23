@@ -108,7 +108,7 @@ require(['schart'], function (s){
     s.drawMixAvg("#svg6",data10,title10,function(data){});
     s.drawColumn("#svg5",data5,title5,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
 //    s.drawMixAvg("#svg1",data11,title11,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
-//    s.drawLine("#svg6",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
+    s.drawLine("#svg3",data1,title1,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
 //    s.drawPie("#svg1",data0,title0,function(data){     if(data){         $('#abtext').hide();      }else{         $('#abtext').show();     }  });
 //    s.drawLoop("#svg5",data9);
     s.drawBar("#svg4",data4,title4,function(data){     if(data){        $('#abtext').hide();      }else{      $('#abtext').show();     } });
@@ -122,15 +122,7 @@ require(['schart'], function (s){
             console.log(data);
         }
     },true);
-    s.drawProgress3("#svg3",data66,title66,function(data){
-        if(data){
-            console.log("if");
-            console.log(data);
-        }else{
-            console.log("else");
-            console.log(data);
-        }
-    },true);
+//    s.drawProgress3("#svg3",data66,title66,function(data){if(data){console.log("if");console.log(data);}else{console.log("else");console.log(data);}},true);
 
 //
 //    s.draw("#svg1",{

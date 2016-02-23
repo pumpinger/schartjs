@@ -130,7 +130,7 @@
                     ]
                 },
                 {
-                    name:'北京',
+                    name:'南京',
                     items:[
                         {
                             name:"朝阳",
@@ -143,7 +143,7 @@
                     ]
                 },
                 {
-                    name:'北京',
+                    name:'东京',
                     items:[
                         {
                             num:33
@@ -154,7 +154,7 @@
                     ]
                 },
                 {
-                    name:'北京',
+                    name:'西京',
                     num:12
                 }
             ],
@@ -175,7 +175,7 @@
             svg:"#svg3",
             data:[
                 {
-                    name:'北京',
+                    name:'北',
                     items:[
                         {
                             name:"朝阳",
@@ -202,7 +202,7 @@
                     ]
                 },
                 {
-                    name:'上海',
+                    name:'上方的海',
                     items:[
                         {
                             name:"朝阳",
@@ -215,7 +215,7 @@
                     ]
                 },
                 {
-                    name:'广州',
+                    name:'广方州',
                     items:[
                         {
                             num:8
@@ -237,7 +237,7 @@
                     ]
                 },
                 {
-                    name:'成都',
+                    name:'成东西方的都',
                     items:[
                         {
                             num:12
@@ -251,11 +251,104 @@
             noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
             chartStr:"chart complete!"
         };
+        var option3={
+            type:'line',
+            isCompare:false,
+            isFull:false,
+            isHome:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            svg:"#svg3",
+            legend:[],
+            data:[
+                {
+                    name:'北',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                                {
+                                    num:2,
+                                },
+                                {
+                                    num:3
+                                }
+                            ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:4
+                                },
+                                {
+                                    num:5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'上方的海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广方州',
+                    items:[
+                        {
+                            num:8
+                        },
+                        {
+                            num:9
+                        }
+                    ]
+                },
+                {
+                    name:'深圳',
+                    items:[
+                        {
+                            num:10
+                        },
+                        {
+                            num:11
+                        }
+                    ]
+                },
+                {
+                    name:'成东西方的都',
+                    items:[
+                        {
+                            num:12
+                        },
+                        {
+                            num:13
+                        }
+                    ]
+                }
+            ],
+            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
+            value: [0, 320, 120, 150, 820],
+            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
         function drawInfo(info){
             console.log("callback:",info);
         }
-        sChartDraw(option,drawInfo);
-        sChartDraw(option2,drawInfo);
+        //sChartDraw(option,drawInfo);
+        sChartDraw(option3,drawInfo);
 
         var svgsnap = Snap("#svg4");
         var svga = svgsnap.paper.circle(50, 50, 40).attr({

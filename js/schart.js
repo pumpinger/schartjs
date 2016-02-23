@@ -3494,10 +3494,7 @@
                 textProgeress.attr('x', bl + getDataX(v4) - textProgeress.getBBox().width - 4);
                 textProgeress.attr('fill','#000');
             }
-
             bars.add(textProgeress);
-
-
         }
 
         function drawDataBar() {
