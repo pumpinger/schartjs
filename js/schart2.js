@@ -10,36 +10,11 @@
 
         //定义Draw函数的局部变量
         var svg = Snap(option.svg);//snap对象
-        var svgDom = $(option.svg);
-        var svgData ={
-            //viewbox的宽高
-            viewboxHeight:0,
-            viewboxWidth:0,
-            viewboxLeft:0,
-            viewboxRight:0,
-            viewboxTop:0,
-            viewboxBottom:0,
-
-            //提示框顶部到头部距离 提示框底部到头部距离
-            tipTop:0,
-            tipBottom:0,
-            tipHeight:0,
-
-            //坐标系
-            xAixs: 0,
-            xAixsPer: 0,
-            xAixsLength: 0,
-
-            yAixs: 0,
-            yAixsPer: 0,
-            yAixsLength: 0,
-
-            //图表区域
-            chartLeft:0,
-            chartRight:0,
-            chartTop:0,
-            chartBottom:0
-        };//svg画图数据
+        var svgDom = $(option.svg);//jQuery对象
+        var svgData ={};//svg画图数据
+        console.log("svg",svg);
+        console.log("svgDom",svgDom);
+        console.log("svgData",svgData);
 
         //计算画图信息
         initSvgData();
@@ -48,66 +23,6 @@
         beginDrawing();
 
 //------------------ Functions ---------------------//
-        //判断是否可图
-        function drawAble(){
-            if (!option.svg || !(option.data || option.noDataMsg)) {
-                return false;
-            }else{
-                return true;
-            }
-        }
-
-        //初始化参数，赋默认值等。
-        function initParameter(){
-            if (typeof callback != "function") {
-                callback = function(){};
-            }
-        }
-
-        //计算画图信息
-        function initSvgData(){
-            //viewbox的宽高
-            svgData.viewboxHeight = svgDom.height();
-            svgData.viewboxWidth = svgDom.width();
-            svgData.viewboxLeft = 0;
-            svgData.viewboxRight = svgData.viewboxWidth;
-            svgData.viewboxTop = 0;
-            svgData.viewboxBottom = svgData.viewboxHeight;
-
-            //提示框顶部到头部距离 提示框底部到头部距离
-            svgData.tipTop = 0;
-            svgData.tipBottom = 30;
-            svgData.tipHeight = svgData.tipBottom - svgData.tipTop;
-
-            //坐标系
-            svgData.xAixs = ['周一','周二','周三','周四','周五','周六','周日'];
-            svgData.xAixsLength = 0;//x轴长度
-            svgData.xAixsPer = 0;//x轴每段值
-
-
-            svgData.yAixs = ['100','200','300','400','500','600','700'];
-            svgData.yAixsLength = 0;//y轴长度
-            svgData.yAixsPer= 0;//y轴每段值
-
-            //图表区域
-            svgData.chartLeft = 10;
-            svgData.chartRight = svgData.viewboxWidth - 10;
-            svgData.chartTop = 2 * (svgData.tipBottom - svgData.tipTop) + svgData.tipTop + 10;
-            svgData.chartBottom =  svgData.viewboxHeight - 23;
-        }
-
-        function getMax(abc){
-            var max=0;
-            for (var a in abc){
-                max = max>a ? max:a;
-            }
-            return max;
-        }
-
-        function getCoordinate(value,ratio,base){
-            return base + value*ratio;
-        }
-
         //旧函数，参考
         function drawLine0(dom, data, legend, fun, option, nodataStr) {
             var svg = Snap(dom);
@@ -321,7 +236,6 @@
                     drawOneTip(index, data[index]);
 
                 }
-
             }
 
 
@@ -435,13 +349,9 @@
 
             function _drawDateEndText(endText) {
                 //这里 data是 无对比的
-
                 var val = data[data.length - 1].price;
                 var endpointY = parseFloat(data[data.length - 1].price);
-
                 var offsetText = endpointY > (cperv * cline) / 1.3 ? 24 : -18;
-
-
                 var rect = svg.rect(vw, getDataY(val) + offsetText - 13, 0, 17, 10, 10).attr({
                     fill: isHome ? "#ffffff" : "#89c058"
                 });
@@ -458,7 +368,6 @@
                     x: cr - text.getBBox().width
                 });
                 endText.add(rect, text);
-
             }
 
             function _drawDataShandow(initpath, datapath) {
@@ -478,7 +387,6 @@
 
             function _drawBgLeft() {
                 var lineh = (cb - ct) / cline;
-
                 var bgLine = svg.line(cl, cb, cr, cb).attr({
                     stroke: isHome ? '#519ddb' : '#e2e2e2',
                     strokeDasharray: "10 2",
@@ -502,7 +410,6 @@
             }
 
             function _drawBgBottom() {
-
                 var style = svg.paper.g().attr({
                     fill: isHome ? '#7abfe9' : fontColor,
                     fontSize: 10
@@ -532,10 +439,7 @@
                     lasttext2.attr({
                         x: vw - lasttext1.getBBox().width
                     });
-
                     //中间要显示出来日期的点
-
-
                     for (var i = 1; i < showarr.length - 1; i++) {
                         var midtext1 = svg.text(cperx * showarr[i] + cl, cb + 12, curdata[showarr[i]].name.substr(0, longs));
                         var midtext2 = svg.text(cperx * showarr[i] + cl, cb + 22, curdata[showarr[i]].name.substr(longs));
@@ -626,12 +530,184 @@
                 return cb;
             }
 
+            function _getPerV(max, cline) {
+                if (max == 0) {
+                    return 1;
+                }
 
+                var per = max / cline;   //每条线的间隔
+                var mod;   //取整系数
+                if (per > 10000) {
+                    mod = 5000;
+                } else if (per > 5000) {
+                    mod = 1000;
+                } else if (per > 2000) {
+                    mod = 500;
+                } else if (per > 500) {
+                    mod = 100;
+                } else if (per > 100) {
+                    mod = 20;
+                } else if (per > cline) {
+                    mod = 10;
+                } else {
+                    mod = 1;
+                }
+                return Math.ceil(per / mod) * mod;
+            }
+
+            function _formatNumber(v) {
+                var fmtv;
+                if (v >= 100000) { //10w
+                    if (v >= 100000000) {  //亿
+                        if (v >= 10000000000) {  //百亿
+                            fmtv = Math.round(v / 100000000);
+                            return [fmtv.toString(), '亿'];
+                        }
+                        fmtv = Math.round(v / 10000000);
+                        return [fmtv.toString().slice(0, -1), '亿', fmtv.toString().slice(-1)];
+                    }
+                    if (v >= 1000000) {  //百万
+                        fmtv = Math.round(v / 10000);
+                        return [fmtv.toString(), '万'];
+                    }
+                    fmtv = Math.round(v / 1000);
+                    return [fmtv.toString().slice(0, -1), '万', fmtv.toString().slice(-1)];
+                }
+                return [v.toString()];
+            }
+
+            function _formatMoney(num) {
+                var numArr = _formatNumber(parseInt(num));
+                var money;
+                if (numArr[0].length > 3) {
+                    for (var i = 3; i < numArr[0].length; i += 4) {
+                        money = numArr[0].slice(0, -i) + ',' + numArr[0].slice(-i);
+                    }
+                } else {
+                    money = numArr[0];
+                }
+                if (numArr[2]) {
+                    money += '.' + numArr[2];
+                }
+                if (numArr[1]) {
+                    money += numArr[1];
+                }
+                return money;
+            }
+
+        }
+
+        //判断是否可图
+        function drawAble(){
+            if (!option.svg || !(option.data || option.noDataMsg)) {
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        //初始化参数，赋默认值等。
+        function initParameter(){
+            callback = (typeof callback == "function") ? callback : function(){};
+            option.legend = (option.legend) ? option.legend : ['呵呵','嘻嘻哈哈嘿嘿'];
+            option.noDataMsg = (option.noDataMsg) ? option.noDataMsg : ['呵呵','嘻嘻哈哈嘿嘿'];
+        }
+
+        //计算画图信息
+        function initSvgData(){
+            //提示框顶部到头部距离 提示框底部到头部距离
+            svgData.tipTop = 0;
+            svgData.tipBottom = 60;
+
+            //图表区域
+            svgData.chartLeft = 10;
+            svgData.chartRight = svgDom.width() - 10;
+            svgData.chartTop = svgData.tipBottom + 10;
+            svgData.chartBottom =  svgDom.height() - 10;
+
+            //坐标系
+            svgData.valueAmount = 5;
+            svgData.valuePer = 0;
+            svgData.ratio = 1;
+            svgData.dataLength = option.value.length;
+
+
+            svgData.xAxis = getAxisName(option.name);
+            svgData.xAxisHeight = 0;//x轴内容高度
+            svgData.xAxisPer = 0;//x轴每段值
+
+            svgData.yAxis = getAxisValue(option.value);
+            svgData.yAxisWidth = 0;//y轴内容宽度
+            svgData.yAxisPer = 0;//y轴每段值
+
+            svgData.xCoordinate = [];
+            svgData.yCoordinate = [];
+
+        }
+
+
+        //提取Data中的Name
+        function getName(array){
+            var name = [];
+            for(var i=0; i<array.length; i++){
+                name.push(array[i].name);
+            }
+            return name;
+        }
+
+        //提取Data中的Value
+        function getValue(array){
+            var value = [];
+            for(var i=0; i<array.length; i++){
+                value.push(array[i].value);
+            }
+            return value;
+        }
+
+        //获取坐标轴Name数据
+        function getAxisName(array){
+            var axisName = [];
+            for(var i=0; i<array.length; i++){
+                axisName.push(array[i]);
+            }
+            return axisName;
+        }
+
+        //获取坐标轴Value数据
+        function getAxisValue(array){
+            var valueMax = getMax(array);
+            svgData.valuePer = Math.ceil(valueMax/svgData.valueAmount);
+
+            var axisValue = [];
+            for (var i=0; i<svgData.valueAmount+1; i++){
+                axisValue.push(String(svgData.valuePer*i));
+            }
+            return axisValue;
+        }
+
+        function getMax(array){
+            var max=0;
+            for (var i=0; i<array.length; i++){
+                max = max>array[i] ? max : array[i];
+            }
+            return max;
+        }
+
+        function getCoordinate(value,ratio,base){
+            return base - value*ratio;
+        }
+
+        function setCoordinateData(){
+            svgData.ratio = svgData.yAxisPer/svgData.valuePer;
+            for(var i=0; i<svgData.dataLength; i++){
+                svgData.xCoordinate[i] = svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*(i+1/2);
+                svgData.yCoordinate[i] = getCoordinate(option.value[i],svgData.ratio,svgData.chartBottom-(svgData.xAxisHeight));
+            }
         }
 
         //开始画图，根据option选择画何种图、如何画。
         function beginDrawing(){
-            svgClear();
+            //svgClear();
             switch(option.type){
                 case "line": drawLine();break;
                 case "bar": drawBar();break;
@@ -651,6 +727,7 @@
 
         //画默认图
         function drawDefault(){
+            drawBox();
             var svgw, svgh;
             if (svg.attr('viewBox')) {
                 svgw = svg.attr('viewBox').width;
@@ -667,40 +744,36 @@
             var str = [];
             str[0] = '暂无经营数据';
             str[1] = '赶快使用订单系统，公司经营各项数据轻松在手！';
-            if (option.nodata_msg) {
-                str = option.nodata_msg;
+            if (option.noDataMsg) {
+                str = option.noDataMsg;
             }
+            console.log("str:",str);
 
-            var text = svg.text(svgw / 2, img.getBBox().y2 + 24, str[0]).attr({
-                fontSize: 16,
-                fill: 1 ? '#67b7ed' : '#bbbbbb'
-            });
-            var text2 = svg.text(svgw / 2, img.getBBox().y2 + 46, str[1]).attr({
-                fontSize: 14,
-                fill: 1 ? '#67b7ed' : '#bbbbbb'
-            });
-
-            text.attr({
-                x: svgw / 2 - text.getBBox().width / 2
-            });
-            text2.attr({
-                x: svgw / 2 - text2.getBBox().width / 2
-            });
+            var text = [];
+            //循环输出Msg
+            for (var i=0; i<str.length; i++){
+                text[i] = svg.text(svgw / 2, img.getBBox().y2 + 24*(i+1), str[i]).attr({
+                    fontSize: 16,
+                    fill: '#67b7ed'
+                });
+                text[i].attr({
+                    x: svgw / 2 - text[i].getBBox().width / 2
+                });
+            }
 
             return false;
         }
 
         //画折线图
         function drawLine(){
-            drawCoordinateFrame();
-            drawOneLine();
+            drawAxes(svgData.xAxis,svgData.yAxis);
+            setCoordinateData();
+            drawOneLine(svgData.xCoordinate,svgData.yCoordinate);
             bindEvent();
         }
 
         //画条形图
         function drawBar(){
-            drawCoordinateFrame();
-
             drawOneBar();
 
             bindEvent();
@@ -708,7 +781,7 @@
 
         //画饼图
         function drawPie(){
-            drawCoordinateFrame();
+
 
             drawOnePie();
 
@@ -719,35 +792,110 @@
         //function drawColumn(){};
         //function drawLoop(){}
 
-        //画坐标系
-        function drawCoordinateFrame(){}
+
+        function drawAxes(xAxisData,yAxisData){
+            var i=0;//循环计数
+
+            //画x轴
+            var xText = [];
+            var xHeight = [];
+            for (i=0; i<xAxisData.length; i++){
+                xText[i] = svg.text(0, 0, xAxisData[i]).attr({
+                    fontSize: 12,
+                    fill: '#67b7ed'
+                });
+                xHeight.push(xText[i].getBBox().height);
+            }
+            svgData.xAxisHeight = getMax(xHeight);//x轴高度
+
+            //画y轴
+            var yText = [];
+            var yWidth = [];
+            for (i=0; i<yAxisData.length; i++){
+                yText[i] = svg.text(0, 0, yAxisData[i]).attr({
+                    fontSize: 12,
+                    fill: '#67b7ed'
+                });
+                yWidth.push(yText[i].getBBox().width);
+            }
+            svgData.yAxisWidth = getMax(yWidth);//y轴宽度
+
+
+            svgData.xAxisPer = Math.ceil((svgData.chartRight-svgData.yAxisWidth-svgData.chartLeft)/xAxisData.length);
+            svgData.yAxisPer = Math.ceil((svgData.chartBottom-(svgData.xAxisHeight+10)-svgData.chartTop)/yAxisData.length);
+
+
+            //重新定位x轴
+            for (i=0; i<xAxisData.length; i++){
+                xText[i].attr({
+                    x: svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*i + (svgData.xAxisPer - xText[i].getBBox().width)/2,
+                    y: svgData.chartBottom
+                });
+            }
+
+            //重新定位y轴
+            for (i=0; i<yAxisData.length; i++){
+                yText[i].attr({
+                    x: svgData.chartLeft + (svgData.yAxisWidth-yWidth[i]),
+                    y: (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i
+                });
+
+                svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i, svgData.chartRight, (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i).attr({
+                    stroke: "#31B2E6",
+                    strokeWidth: 1
+                });
+            }
+
+            ////画其他线
+            //for (i=0;i<yAxisData.length-1; i++){
+            //    svg.line(svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*(i+1), svgData.chartBottom, 10 + svgData.yAxisWidth + svgData.xAxisPer*(i+1), svgData.chartBottom-svgData.xAxisHeight).attr({
+            //        stroke: "#31B2E6",
+            //        strokeWidth: 1
+            //    });
+            //}
+
+            //y轴线,间隙5
+            svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartTop, svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartBottom-svgData.xAxisHeight).attr({
+                stroke: "#31B2E6",
+                strokeWidth: 1
+            });
+
+            //x轴线
+            svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartBottom-svgData.xAxisHeight, svgData.chartRight, svgData.chartBottom-svgData.xAxisHeight).attr({
+                stroke: "#31B2E6",
+                strokeWidth: 1
+            });
+
+
+            return false;
+        }
 
         //画一个折线
-        function drawOneLine(){
-
+        function drawOneLine(xArray,yArray){
+            for (var i=0; i<svgData.dataLength-1; i++){
+                svg.line(xArray[i], yArray[i], xArray[i+1], yArray[i+1]).attr({
+                    stroke: "#88BF57",
+                    strokeWidth: 3
+                });
+            }
         }
 
         //画一个条形
-        function drawOneBar(){
-
-        }
+        function drawOneBar(){}
 
         //画一个饼
-        function drawOnePie(){
-
-        }
+        function drawOnePie(){}
 
         //绑定事件
         function bindEvent(){}
 
         //画Tip
         function drawTip(){}
-
-
-
+        //清除Tip
+        function fadeTip(){}
 
         //this.opt = $.extend(true,{},defOpt,opt);
-
+        return false;
     };
 })();
 

@@ -3472,7 +3472,7 @@
             });
             bars.add(rect3);
 
-            var completeness
+            var completeness;
             var v5 = parseFloat(v)+parseFloat(v3);
             if(0!=v2 && parseFloat(v)<=parseFloat(v2)){
                 completeness = Number(Math.round(v5/v2*10000)/100).toFixed(2)+'%';
@@ -3494,10 +3494,7 @@
                 textProgeress.attr('x', bl + getDataX(v4) - textProgeress.getBBox().width - 4);
                 textProgeress.attr('fill','#000');
             }
-
             bars.add(textProgeress);
-
-
         }
 
         function drawDataBar() {
