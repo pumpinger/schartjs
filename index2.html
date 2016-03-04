@@ -56,17 +56,29 @@
 
 
 <svg id="svg1" height="300px" width="100%" >
-
 </svg>
+
 <svg id="svg3" height="300px" width="100%" >
-
 </svg>
+
 <svg id="svg4" height="300px" width="100%" >
-
 </svg>
+
 <svg id="svg5" height="300px" width="100%" >
-
 </svg>
+
+<svg id="svg6" height="300px" width="100%" >
+</svg>
+
+<svg id="svg7" height="300px" width="100%" >
+</svg>
+
+<svg id="svg8" height="300px" width="100%" >
+</svg>
+
+<svg id="svg9" height="300px" width="100%" >
+</svg>
+
 1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
 
 <div id='ccc' style="margin: 20px 0 0 0;position: static;">
@@ -109,7 +121,7 @@
                             name:"朝阳",
                             items:[
                                 {
-                                    num:33,
+                                    num:33
                                 },
                                 {
                                     num:33
@@ -251,8 +263,9 @@
             noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
             chartStr:"chart complete!"
         };
-        var option3={
+        var optionline={
             type:'line',
+            svg:"#svg1",
             isCompare:false,
             isFull:false,
             isHome:false,
@@ -262,8 +275,8 @@
             markerMsg:this.num+'Km',
             avg:false,
             avgMsg:this.avg+'Km',
-            svg:"#svg3",
             legend:[],
+            color:['#88BF57'],
             data:[
                 {
                     name:'北',
@@ -272,7 +285,7 @@
                             name:"朝阳",
                             items:[
                                 {
-                                    num:2,
+                                    num:2
                                 },
                                 {
                                     num:3
@@ -339,6 +352,268 @@
                     ]
                 }
             ],
+            touchTime: 5,
+            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
+            value: [0, 320, 120, 150, 820],
+            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        var optionbar={
+            type:'bar',
+            svg:"#svg3",
+            isCompare:false,
+            isFull:false,
+            isHome:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            legend:[],
+            color:['#88BF57'],
+            data:[
+                {
+                    name:'北',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                            {
+                                num:2
+                            },
+                            {
+                                num:3
+                            }
+                        ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:4
+                                },
+                                {
+                                    num:5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'上方的海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广方州',
+                    items:[
+                        {
+                            num:8
+                        },
+                        {
+                            num:9
+                        }
+                    ]
+                },
+                {
+                    name:'深圳',
+                    items:[
+                        {
+                            num:10
+                        },
+                        {
+                            num:11
+                        }
+                    ]
+                },
+                {
+                    name:'成东西方的都',
+                    items:[
+                        {
+                            num:12
+                        },
+                        {
+                            num:13
+                        }
+                    ]
+                }
+            ],
+            touchTime: 5,
+            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
+            value: [0, 320, 120, 150, 820],
+            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        var optioncolumn={
+            type:'bar',
+            svg:"#svg3",
+            isCompare:false,
+            isFull:false,
+            isHome:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            legend:[],
+            color:['#88BF57'],
+            data:[
+                {
+                    name:'北',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                            {
+                                num:2
+                            },
+                            {
+                                num:3
+                            }
+                        ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:4
+                                },
+                                {
+                                    num:5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'上方的海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广方州',
+                    items:[
+                        {
+                            num:8
+                        },
+                        {
+                            num:9
+                        }
+                    ]
+                },
+                {
+                    name:'深圳',
+                    items:[
+                        {
+                            num:10
+                        },
+                        {
+                            num:11
+                        }
+                    ]
+                },
+                {
+                    name:'成东西方的都',
+                    items:[
+                        {
+                            num:12
+                        },
+                        {
+                            num:13
+                        }
+                    ]
+                }
+            ],
+            touchTime: 5,
+            tier: ['北','成东西方的都','深圳','上方的海','广方州'],
+            tierSn:[0,1,5,8,10,11],
+            name: ['北京', '成', '成都', '成', '成', '深圳', '成', '成', '上海', '成', '广州'],
+            value: [780, 222, 444, 320, 220, 150, 320, 620, 760, 150, 820],
+            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        var option0000={
+            type:'column',
+            svg:"#svg4",
+            isCompare:false,
+            isFull:false,
+            isHome:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            legend:[],
+            color:['#88BF57'],
+            data:[
+                {
+                    name:'北',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num: [2, 3]
+                        },
+                        {
+                            name:"朝阳2",
+                            num:[4,5]
+                        }
+                    ]
+                },
+                {
+                    name:'上方的海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广方州',
+                    items:[8,9]
+                },
+                {
+                    name:'深圳',
+                    num:[10,11]
+                },
+                {
+                    name:'成东西方的都',
+                    num:[12,13]
+                },
+                {
+                    name:'南方的京',
+                    num:14
+                },
+                {
+                    name:'天方的津',
+                    num:14
+                }
+            ],
+            touchTime: 5,
+            tier: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
             name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
             value: [0, 320, 120, 150, 820],
             noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
@@ -347,18 +622,17 @@
         function drawInfo(info){
             console.log("callback:",info);
         }
-        //sChartDraw(option,drawInfo);
-        sChartDraw(option3,drawInfo);
+       // sChartDraw(optionline,drawInfo);
+        //sChartDraw(optioncolumn,drawInfo);
+        sChartDraw(optioncolumn,drawInfo);
 
-        var svgsnap = Snap("#svg4");
-        var svga = svgsnap.paper.circle(50, 50, 40).attr({
+        var svgsnap = Snap("#svg6");
+        svgsnap.circle(50, 50, 40).attr({
             fill: "#fc0",
             stroke: "#000",
             strokeWidth: 2,     // 驼峰命名...
             "fill-opacity": 0.5 // 或者短横符连接名称
         });
-
-        console.log(svga);
     });
 </script>
 
