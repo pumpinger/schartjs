@@ -353,9 +353,106 @@
                 }
             ],
             touchTime: 5,
+            tier: ['北','成东西方的都','深圳','上方的海','广方州'],
+            tierSn:[0,2,5,8,10,11],
+            name: ['北京', '成', '成都', '成', '成', '深圳', '成', '成', '上海', '成', '广州'],
+            value: [780, [222,33,44], 444, [320,234], 220, 150, 320, 620, 760, 150, 820],
+            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
+            chartStr:"chart complete!"
+        };
+        var optioncolumn={
+            type:'column',
+            svg:"#svg3",
+            isCompare:false,
+            isFull:false,
+            isHome:false,
+            tip:false,
+            tipMsg:this.num+'Km',
+            marker:false,
+            markerMsg:this.num+'Km',
+            avg:false,
+            avgMsg:this.avg+'Km',
+            legend:[],
+            color:['#88BF57'],
+            data:[
+                {
+                    name:'北',
+                    items:[
+                        {
+                            name:"朝阳",
+                            items:[
+                            {
+                                num:2
+                            },
+                            {
+                                num:3
+                            }
+                        ]
+                        },
+                        {
+                            name:"朝阳2",
+                            items:[
+                                {
+                                    num:4
+                                },
+                                {
+                                    num:5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name:'上方的海',
+                    items:[
+                        {
+                            name:"朝阳",
+                            num:6
+                        },
+                        {
+                            name:"朝阳2",
+                            num:7
+                        }
+                    ]
+                },
+                {
+                    name:'广方州',
+                    items:[
+                        {
+                            num:8
+                        },
+                        {
+                            num:9
+                        }
+                    ]
+                },
+                {
+                    name:'深圳',
+                    items:[
+                        {
+                            num:10
+                        },
+                        {
+                            num:11
+                        }
+                    ]
+                },
+                {
+                    name:'成东西方的都',
+                    items:[
+                        {
+                            num:12
+                        },
+                        {
+                            num:13
+                        }
+                    ]
+                }
+            ],
+            touchTime: 5,
             name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
             value: [0, 320, 120, 150, 820],
-            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
+            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
             chartStr:"chart complete!"
         };
         var optionbar={
@@ -448,105 +545,10 @@
                 }
             ],
             touchTime: 5,
-            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
-            value: [0, 320, 120, 150, 820],
-            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var optioncolumn={
-            type:'bar',
-            svg:"#svg3",
-            isCompare:false,
-            isFull:false,
-            isHome:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            legend:[],
-            color:['#88BF57'],
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                            {
-                                num:2
-                            },
-                            {
-                                num:3
-                            }
-                        ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:4
-                                },
-                                {
-                                    num:5
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[
-                        {
-                            num:8
-                        },
-                        {
-                            num:9
-                        }
-                    ]
-                },
-                {
-                    name:'深圳',
-                    items:[
-                        {
-                            num:10
-                        },
-                        {
-                            num:11
-                        }
-                    ]
-                },
-                {
-                    name:'成东西方的都',
-                    items:[
-                        {
-                            num:12
-                        },
-                        {
-                            num:13
-                        }
-                    ]
-                }
-            ],
-            touchTime: 5,
             tier: ['北','成东西方的都','深圳','上方的海','广方州'],
-            tierSn:[0,1,5,8,10,11],
+            tierSn:[0,2,5,8,10,11],
             name: ['北京', '成', '成都', '成', '成', '深圳', '成', '成', '上海', '成', '广州'],
-            value: [780, 222, 444, 320, 220, 150, 320, 620, 760, 150, 820],
+            value: [780, [222,33,44], 444, [320,234], 220, 150, 320, 620, 760, 150, 820],
             noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
             chartStr:"chart complete!"
         };
@@ -622,9 +624,9 @@
         function drawInfo(info){
             console.log("callback:",info);
         }
-       // sChartDraw(optionline,drawInfo);
+        sChartDraw(optionline,drawInfo);
         //sChartDraw(optioncolumn,drawInfo);
-        sChartDraw(optioncolumn,drawInfo);
+        sChartDraw(optionbar,drawInfo);
 
         var svgsnap = Snap("#svg6");
         svgsnap.circle(50, 50, 40).attr({
