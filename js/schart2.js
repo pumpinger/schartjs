@@ -1,23 +1,23 @@
 ;(function(){
-    window.sChartDraw = function (option, callback) {
+    window.sChartDraw = function (option) {
         //判断是否可图
         if(!drawAble()){
             return false;
         }
 
         //初始化参数，赋默认值等。
-        initParameter();
+        initOption();
 
         //定义Draw函数的局部变量
         var svg = Snap(option.svg);//snap对象
         var svgDom = $(option.svg);//jQuery对象
         var svgData ={};//svg画图数据
-        console.log("svg",svg);
-        console.log("svgDom",svgDom);
-        console.log("svgData",svgData);
 
-        //计算画图信息
+        //初始化SVG信息
         initSvgData();
+
+        //提取Data数据
+        //getOptionData();
 
         //开始画图
         beginDrawing();
@@ -118,7 +118,6 @@
                                 e.preventDefault();
                                 var x = e.touches[0].clientX;
                                 popTip(x);
-
                             });
                         }, 100);
 
@@ -139,17 +138,13 @@
             }
 
             function popTip(x) {
-
                 var index = getCurIndex(x);
-
                 var lastIndex = $('.svglinetip').attr('svglineid');
                 if (lastIndex != index) {
                     $('.svglinetip').remove();
                     $('.svglinemaker').hide();
                     drawTip(index);
                 }
-
-
             }
 
             function fadeTip() {
@@ -594,130 +589,163 @@
                 }
                 return money;
             }
-
         }
 
         //判断是否可图
         function drawAble(){
-            if (!option.svg || !(option.data || option.noDataMsg)) {
-                return false;
-            }else{
+            if (option.svg && (option.data || option.noDataMsg)) {
                 return true;
+            }else{
+                return false;
             }
         }
 
-        //初始化参数，赋默认值等。
-        function initParameter(){
-            callback = (typeof callback == "function") ? callback : function(){};
-            option.legend = (option.legend) ? option.legend : ['呵呵','嘻嘻哈哈嘿嘿'];
+        //初始化Option，赋默认值等。
+        function initOption(){
+            option.callback = (typeof option.callback === "function") ? option.callback : function(){};
+            option.legend = (option.legend) ? option.legend : [];
             option.noDataMsg = (option.noDataMsg) ? option.noDataMsg : ['呵呵','嘻嘻哈哈嘿嘿'];
         }
 
-        //计算画图信息
+        //初始化SVG信息
         function initSvgData(){
-            //提示框顶部到头部距离 提示框底部到头部距离
-            svgData.tipTop = 0;
-            svgData.tipBottom = 60;
+            //viewBox区域
+            svgData.viewBoxLeft = 10;
+            svgData.viewBoxRight = svgDom.width() - 10;
+            svgData.viewBoxTop = 10;
+            svgData.viewBoxBottom = svgDom.height() - 10;
+
+            //提示框区域
+            svgData.tipTop = svgData.viewBoxTop;
+            svgData.tipBottom = svgData.tipTop + (option.tip ? 60 : 0);//是否有Tip
+
+            //数据坐标
+            svgData.rotation = false;
+
+            svgData.axisValueAmount = 5;
+            svgData.valuePer = 0;//svgData.valueMax/svgData.axisValueAmount
+            svgData.ratio = 1;//长度与值比，svgData.yAxisPer/svgData.valuePer
+
+            svgData.xAxisPer = 0;//xAxis每段长度值
+            svgData.yAxisPer = 0;//yAxis每段长度值
+            svgData.xCoordinate = [];//x坐标
+            svgData.yCoordinate = [];//y坐标
+
+            //Tier
+            svgData.axisTier = option.tier;//Tier内容
+            svgData.axisTierText = [];//TierSVG
+            svgData.axisTierWidth = 0;
+            svgData.axisTierHeight = 0;
+            svgData.axisTierSn = option.tierSn;//Tier的name数
+
+            //Name
+            svgData.axisName = option.name;//Name内容
+            svgData.axisNameText = [];//NameSVG
+            svgData.axisNameWidth = 0;
+            svgData.axisNameHeight = 0;
+
+            //Value
+            svgData.value = option.value;
+            svgData.axisValue = getAxisValue(svgData.value);//Value内容
+            svgData.axisValueText = [];//ValueSVG
+            svgData.axisValueWidth = 0;
+            svgData.axisValueHeight = 0;
 
             //图表区域
-            svgData.chartLeft = 10;
-            svgData.chartRight = svgDom.width() - 10;
-            svgData.chartTop = svgData.tipBottom + 10;
-            svgData.chartBottom =  svgDom.height() - 10;
-
-            //坐标系
-            svgData.valueAmount = 5;
-            svgData.valuePer = 0;
-            svgData.ratio = 1;
-            svgData.dataLength = option.value.length;
-
-
-            svgData.xAxis = getAxisName(option.name);
-            svgData.xAxisHeight = 0;//x轴内容高度
-            svgData.xAxisPer = 0;//x轴每段值
-
-            svgData.yAxis = getAxisValue(option.value);
-            svgData.yAxisWidth = 0;//y轴内容宽度
-            svgData.yAxisPer = 0;//y轴每段值
-
-            svgData.xCoordinate = [];
-            svgData.yCoordinate = [];
-
+            svgData.chartLeft = 0;
+            svgData.chartRight = 0;
+            svgData.chartTop = 0;
+            svgData.chartBottom = 0;
         }
 
+        //提取Data数据
+        function getOptionData(){
+            option.data.forEach(function(item,index,array){
+                console.log('item:',item);
+                console.log('index:',index);
+                console.log('array:',array);
+            });
 
-        //提取Data中的Name
-        function getName(array){
-            var name = [];
-            for(var i=0; i<array.length; i++){
-                name.push(array[i].name);
-            }
-            return name;
-        }
+            getData(option.data);
 
-        //提取Data中的Value
-        function getValue(array){
-            var value = [];
-            for(var i=0; i<array.length; i++){
-                value.push(array[i].value);
+            var An;
+            function getData(data){
+                var i,j,k;
+                for (i=0;i<data.length;i++){
+                    if(data[i].num){
+                        svgData.axisName.push(data[i].name);
+                        svgData.axisValue.push(data[i].num);
+                    }else{
+                        svgData.axisTierSn.push(0);
+                        svgData.axisTier.push(data[i].name);
+                        getData(data[i].items);
+                    }
+                }
+                return false;
             }
-            return value;
-        }
-
-        //获取坐标轴Name数据
-        function getAxisName(array){
-            var axisName = [];
-            for(var i=0; i<array.length; i++){
-                axisName.push(array[i]);
-            }
-            return axisName;
+            return false;
         }
 
         //获取坐标轴Value数据
         function getAxisValue(array){
-            var valueMax = getMax(array);
-            svgData.valuePer = Math.ceil(valueMax/svgData.valueAmount);
+            var i;
+            var valueMax = getValueMax(array);
+            svgData.valuePer = getValuePer(valueMax,svgData.axisValueAmount);
 
             var axisValue = [];
-            for (var i=0; i<svgData.valueAmount+1; i++){
+            for (i=0; i<svgData.axisValueAmount+1; i++){
                 axisValue.push(String(svgData.valuePer*i));
             }
             return axisValue;
         }
 
-        function getMax(array){
-            var max=0;
-            for (var i=0; i<array.length; i++){
-                max = max>array[i] ? max : array[i];
+        function getValueMax(array){
+            var temp=[];
+            var sum = 0;
+            array.forEach(function(item){
+                if(item[0]){
+                    sum = 0;
+                    item.forEach(function(ite){
+                        sum = sum + ite;
+                    });
+                    temp.push(sum);
+                }else{
+                    temp.push(item);
+                }
+            });
+            return Math.max.apply(Math,temp);
+        }
+
+        //坐标轴Value每段值
+        function getValuePer(max, amount) {
+            if (max == 0) {return 1;}
+            var per = max / amount;   //每条线的间隔
+            var mod;   //取整系数
+            switch(true){
+                case per>10000 : mod=5000; break;
+                case per>5000 : mod=1000; break;
+                case per>1000 : mod=500; break;
+                case per>500 : mod=100; break;
+                case per>100 : mod=50; break;
+                case per>amount : mod=10; break;
+                default : mod=1;
             }
-            return max;
+            return Math.ceil(per / mod) * mod;
         }
 
-        function getCoordinate(value,ratio,base){
-            return base - value*ratio;
-        }
 
-        function setCoordinateData(){
-            svgData.ratio = svgData.yAxisPer/svgData.valuePer;
-            for(var i=0; i<svgData.dataLength; i++){
-                svgData.xCoordinate[i] = svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*(i+1/2);
-                svgData.yCoordinate[i] = getCoordinate(option.value[i],svgData.ratio,svgData.chartBottom-(svgData.xAxisHeight));
-            }
-        }
-
-        //开始画图，根据option选择画何种图、如何画。
+        //开始画图，根据Option选择画何种图、如何画。
         function beginDrawing(){
-            //svgClear();
+            svgClear();
             switch(option.type){
-                case "line": drawLine();break;
-                case "bar": drawBar();break;
-                case "progress": drawBar();break;
-                case "column": drawBar();break;
-                case "pie": drawPie();break;
-                case "loop": drawPie();break;
-                default : drawDefault();
+                case "line": drawLine();break;//折线图
+                case "bar": drawBar();break;//条形图
+                case "column": drawColumn();break;//柱状图
+                case "pie": drawPie();break;//饼图
+                case "loop": drawLoop();break;//环图
+                default : drawDefault();//缺省图
             }
-            callback(option);
+            option.callback(option);
         }
 
         //初始化svg
@@ -725,9 +753,10 @@
             svg.clear();
         }
 
+
+
         //画默认图
         function drawDefault(){
-            drawBox();
             var svgw, svgh;
             if (svg.attr('viewBox')) {
                 svgw = svg.attr('viewBox').width;
@@ -766,114 +795,239 @@
 
         //画折线图
         function drawLine(){
-            drawAxes(svgData.xAxis,svgData.yAxis);
-            setCoordinateData();
+            svgData.rotation = false;
+
+            drawAxesText();//
+
+            updateSvgData();//
+
+            repositionAxesText();//
+
             drawOneLine(svgData.xCoordinate,svgData.yCoordinate);
+
             bindEvent();
         }
 
         //画条形图
         function drawBar(){
-            drawOneBar();
+            svgData.rotation = true;
+
+            drawAxesText();//
+
+            updateSvgData();//
+
+            repositionAxesText();//
+
+            drawOneBar(svgData.xCoordinate,svgData.yCoordinate);
 
             bindEvent();
+        }
+
+        //画柱状图
+        function drawColumn(){
+
         }
 
         //画饼图
         function drawPie(){
 
-
-            drawOnePie();
-
-            bindEvent();
         }
 
-        //function drawProgress(){};
-        //function drawColumn(){};
-        //function drawLoop(){}
+        //画圆环
+        function drawLoop(){
+            var rBig;
+            var rSmall;
 
+            drawPie(rBig);
+            drawPie(rSmall);
 
-        function drawAxes(xAxisData,yAxisData){
+        }
+
+        //画AxesText
+        function drawAxesText(){
             var i=0;//循环计数
-
-            //画x轴
-            var xText = [];
-            var xHeight = [];
-            for (i=0; i<xAxisData.length; i++){
-                xText[i] = svg.text(0, 0, xAxisData[i]).attr({
+            //画tier
+            for (i=0;i<svgData.axisTier.length;i++){
+                svgData.axisTierText[i] = svg.text(0, 0, svgData.axisTier[i]).attr({
                     fontSize: 12,
                     fill: '#67b7ed'
                 });
-                xHeight.push(xText[i].getBBox().height);
+                svgData.axisTierWidth = getLarger(svgData.axisTierWidth, svgData.axisTierText[i].getBBox().width);
+                svgData.axisTierHeight = getLarger(svgData.axisTierHeight, svgData.axisTierText[i].getBBox().height);
             }
-            svgData.xAxisHeight = getMax(xHeight);//x轴高度
-
-            //画y轴
-            var yText = [];
-            var yWidth = [];
-            for (i=0; i<yAxisData.length; i++){
-                yText[i] = svg.text(0, 0, yAxisData[i]).attr({
+            //画name
+            for (i=0; i<svgData.axisName.length; i++){
+                svgData.axisNameText[i] = svg.text(0, 0, svgData.axisName[i]).attr({
                     fontSize: 12,
                     fill: '#67b7ed'
                 });
-                yWidth.push(yText[i].getBBox().width);
+                svgData.axisNameWidth = getLarger(svgData.axisNameWidth, svgData.axisNameText[i].getBBox().width);
+                svgData.axisNameHeight = getLarger(svgData.axisNameHeight, svgData.axisNameText[i].getBBox().height);
             }
-            svgData.yAxisWidth = getMax(yWidth);//y轴宽度
-
-
-            svgData.xAxisPer = Math.ceil((svgData.chartRight-svgData.yAxisWidth-svgData.chartLeft)/xAxisData.length);
-            svgData.yAxisPer = Math.ceil((svgData.chartBottom-(svgData.xAxisHeight+10)-svgData.chartTop)/yAxisData.length);
-
-
-            //重新定位x轴
-            for (i=0; i<xAxisData.length; i++){
-                xText[i].attr({
-                    x: svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*i + (svgData.xAxisPer - xText[i].getBBox().width)/2,
-                    y: svgData.chartBottom
+            //画value
+            for (i=0; i<svgData.axisValue.length; i++){
+                svgData.axisValueText[i] = svg.text(0, 0, svgData.axisValue[i]).attr({
+                    fontSize: 12,
+                    fill: '#67b7ed'
                 });
+                svgData.axisValueWidth = getLarger(svgData.axisValueWidth, svgData.axisValueText[i].getBBox().width);
+                svgData.axisValueHeight = getLarger(svgData.axisValueHeight, svgData.axisValueText[i].getBBox().height);
             }
+            return false;
+        }
 
-            //重新定位y轴
-            for (i=0; i<yAxisData.length; i++){
-                yText[i].attr({
-                    x: svgData.chartLeft + (svgData.yAxisWidth-yWidth[i]),
-                    y: (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i
-                });
+        //更新SvgData
+        function updateSvgData(){
+            //根据rotation处理数据,从这里开始跟X，Y有关。-------------------------------------------------------------------
+            var i=0;
+            if(!svgData.rotation){
+                svgData.xAxisPer = Math.ceil((svgData.viewBoxRight-svgData.viewBoxLeft-svgData.axisValueWidth)/svgData.axisName.length);
+                svgData.yAxisPer = Math.ceil((svgData.viewBoxBottom-svgData.viewBoxTop-(svgData.axisNameHeight+svgData.axisTierHeight))/svgData.axisValue.length);
 
-                svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i, svgData.chartRight, (svgData.chartBottom-svgData.xAxisHeight) - svgData.yAxisPer*i).attr({
-                    stroke: "#31B2E6",
-                    strokeWidth: 1
-                });
+                svgData.chartLeft = svgData.viewBoxLeft+svgData.axisValueWidth;
+                svgData.chartRight = svgData.viewBoxRight;
+                svgData.chartTop = svgData.tipBottom;
+                svgData.chartBottom =  svgData.viewBoxBottom-svgData.axisTierHeight-svgData.axisNameHeight;
+
+                svgData.ratio = svgData.yAxisPer/svgData.valuePer;
+                for(i=0; i<svgData.axisName.length; i++){
+                    svgData.xCoordinate[i] = svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*(i+1/2);
+                    svgData.yCoordinate[i] = svgData.viewBoxBottom-(svgData.axisNameHeight) - svgData.value[i] * svgData.ratio;
+                }
+            }else{
+                svgData.xAxisPer = Math.ceil((svgData.viewBoxRight-svgData.viewBoxLeft-(svgData.axisNameWidth+svgData.axisTierWidth))/svgData.axisValue.length);
+                svgData.yAxisPer = Math.ceil((svgData.viewBoxBottom-svgData.viewBoxTop-svgData.axisValueHeight)/svgData.axisName.length);
+
+                svgData.chartLeft = svgData.viewBoxLeft+svgData.axisTierWidth+svgData.axisNameWidth;
+                svgData.chartRight = svgData.viewBoxRight;
+                svgData.chartTop = svgData.tipBottom;
+                svgData.chartBottom =  svgData.viewBoxBottom-svgData.axisValueHeight;
+
+                svgData.ratio = svgData.xAxisPer/svgData.valuePer;
+                for(i=0; i<svgData.axisName.length; i++){
+                    svgData.xCoordinate[i] = svgData.viewBoxLeft+(svgData.axisValueWidth) + svgData.value[i] * svgData.ratio;
+                    svgData.yCoordinate[i] = svgData.viewBoxTop + svgData.yAxisPer*(i+1/2);
+                }
             }
+            return false;
+        }
 
-            ////画其他线
-            //for (i=0;i<yAxisData.length-1; i++){
-            //    svg.line(svgData.chartLeft + svgData.yAxisWidth + svgData.xAxisPer*(i+1), svgData.chartBottom, 10 + svgData.yAxisWidth + svgData.xAxisPer*(i+1), svgData.chartBottom-svgData.xAxisHeight).attr({
-            //        stroke: "#31B2E6",
-            //        strokeWidth: 1
-            //    });
-            //}
+        function getValueCoordinate(){
+            var temp;
+            if(svgData.value[i][0]){
+                temp=[];
+                svgData.value[i].forEach(function(item){
+                    temp.push(svgData.viewBoxBottom-(svgData.axisNameHeight)-item[i]*svgData.ratio);
+                });
+            }else{
+                temp=0;
+                temp.push(svgData.viewBoxBottom-(svgData.axisNameHeight)-item*svgData.ratio);
+            }
+            return temp;
+        }
+        function getValueCoordinateRotation(){
+            var temp;
+            if(svgData.value[i][0]){
+                temp=[];
+                svgData.value[i].forEach(function(item){
 
-            //y轴线,间隙5
-            svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartTop, svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartBottom-svgData.xAxisHeight).attr({
-                stroke: "#31B2E6",
-                strokeWidth: 1
-            });
+                });
+            }else{
+                temp=0;
 
-            //x轴线
-            svg.line(svgData.chartLeft + svgData.yAxisWidth + 5, svgData.chartBottom-svgData.xAxisHeight, svgData.chartRight, svgData.chartBottom-svgData.xAxisHeight).attr({
-                stroke: "#31B2E6",
-                strokeWidth: 1
-            });
+            }
+            return temp;
+        }
 
+        //重新定位AxesText
+        function repositionAxesText(){
+            var i=0;//循环计数
+            if(!svgData.rotation){
+                //重新定位tier
+                for (i=0; i<svgData.axisTier.length; i++){
+                    svgData.axisNameText[i].attr({
+                        x: svgData.chartLeft + svgData.xAxisPer*svgData.axisTierSn[i] + (svgData.xAxisPer*(svgData.axisTierSn[i+1]-svgData.axisTierSn[i]) - svgData.axisTierText[i].getBBox().width)/2,
+                        y: svgData.viewBoxBottom - svgData.axisTierHeight + svgData.axisTierText[i].getBBox().height
+                    });
+                }
+                //重新定位name
+                for (i=0; i<svgData.axisName.length; i++){
+                    svgData.axisNameText[i].attr({
+                        x: svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*i + (svgData.xAxisPer - svgData.axisNameText[i].getBBox().width)/2,
+                        y: svgData.viewBoxBottom - (svgData.axisTierHeight + svgData.axisNameHeight) + svgData.axisNameText[i].getBBox().height
+                    });
+                }
+                //重新定位value
+                for (i=0; i<svgData.axisValue.length; i++){
+                    svgData.axisValueText[i].attr({
+                        x: svgData.viewBoxLeft+(svgData.axisValueWidth-svgData.axisValueText[i].getBBox().width),
+                        y: (svgData.viewBoxBottom-svgData.axisNameHeight) - svgData.yAxisPer*i
+                    });
+                }
 
+                //画背景线
+                for (i=0; i<svgData.axisValue.length; i++){
+                    svg.line(svgData.viewBoxLeft+svgData.axisValueWidth+5, (svgData.viewBoxBottom-svgData.axisNameHeight)-svgData.yAxisPer*i, svgData.viewBoxRight, (svgData.viewBoxBottom-svgData.axisNameHeight)-svgData.yAxisPer*i).attr({
+                        stroke: "#e2e2e2",
+                        strokeWidth: 1
+                    });
+                }
+
+                ////画其他线
+                //for (i=0;i<yAxisData.length-1; i++){
+                //    svg.line(svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*(i+1), svgData.viewBoxBottom, svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*(i+1), svgData.viewBoxBottom-svgData.axisNameHeight).attr({
+                //        stroke: "#31B2E6",
+                //        strokeWidth: 1
+                //    });
+                //}
+
+            }
+            else{
+                //重新定位tier
+                for (i=0; i<svgData.axisTier.length; i++){
+                    svgData.axisNameText[i].attr({
+                        x: (svgData.viewBoxLeft+svgData.axisTierWidth)-svgData.axisTierText[i].getBBox().width,
+                        y: (svgData.viewBoxBottom-svgData.axisValueHeight)-svgData.yAxisPer*svgData.axisTierSn[i]+svgData.axisTierText[i].getBBox().height/2
+                    });
+                }
+                //重新定位name
+                for (i=0; i<svgData.axisName.length; i++){
+                    svgData.axisNameText[i].attr({
+                        x: (svgData.viewBoxLeft+svgData.axisTierWidth+svgData.axisNameWidth)-svgData.axisNameText[i].getBBox().width,
+                        y: (svgData.viewBoxBottom-svgData.axisValueHeight)-svgData.yAxisPer*(svgData.axisName.length-i-1/2)+svgData.axisNameText[i].getBBox().height/2
+                    });
+                }
+                //重新定位value
+                for (i=0; i<svgData.axisValue.length; i++){
+                    svgData.axisValueText[i].attr({
+                        x: (svgData.viewBoxLeft+svgData.axisNameWidth+svgData.axisTierWidth)+svgData.xAxisPer*i+svgData.axisValueText[i].getBBox().Height/2,
+                        y: svgData.viewBoxBottom-svgData.axisValueHeight+svgData.axisValueText[i].getBBox().Height
+                    });
+                }
+
+                //画背景线
+                for (i=0; i<svgData.axisValue.length; i++){
+                    svg.line(svgData.viewBoxLeft+svgData.axisNameWidth+svgData.axisTierWidth, (svgData.viewBoxBottom-svgData.axisNameHeight)-svgData.yAxisPer*i, svgData.viewBoxRight, (svgData.viewBoxBottom-svgData.axisNameHeight)-svgData.yAxisPer*i).attr({
+                        stroke: "#e2e2e2",
+                        strokeWidth: 1
+                    });
+                }
+
+                ////画其他线
+                //for (i=0;i<yAxisData.length-1; i++){
+                //    svg.line(svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*(i+1), svgData.viewBoxBottom, svgData.viewBoxLeft + svgData.axisValueWidth + svgData.xAxisPer*(i+1), svgData.viewBoxBottom-svgData.axisNameHeight).attr({
+                //        stroke: "#31B2E6",
+                //        strokeWidth: 1
+                //    });
+                //}
+            }
             return false;
         }
 
         //画一个折线
-        function drawOneLine(xArray,yArray){
-            for (var i=0; i<svgData.dataLength-1; i++){
-                svg.line(xArray[i], yArray[i], xArray[i+1], yArray[i+1]).attr({
+        function drawOneLine(x,y){
+            for (var i=0; i<svgData.axisName.length-1; i++){
+                svg.line(x[i], y[i], x[i+1], y[i+1]).attr({
                     stroke: "#88BF57",
                     strokeWidth: 3
                 });
@@ -881,21 +1035,80 @@
         }
 
         //画一个条形
-        function drawOneBar(){}
+        function drawOneBar(x,y){
+            for (var i=0; i<x.length; i++){
+                svg.rect(svgData.chartLeft, y[i], x[i]-svgData.chartLeft, 5).attr({
+                    stroke: "#88BF57",
+                    fill: "#88BF57"
+                });
+            }
+        }
+
+        function drawOneColumn(x,y){
+            for (var i=0; i<x.length; i++){
+                svg.rect(x[i], y[i], 5, svgData.chartBottom-y[i]).attr({
+                    stroke: svgData.color[0],
+                    fill: color[0]
+                });
+            }
+        }
 
         //画一个饼
-        function drawOnePie(){}
+        function drawOnePie(r){
+
+        }
 
         //绑定事件
-        function bindEvent(){}
+        function bindEvent(){
+            svg.touchstart(function (e) {
+                var x = e.touches[0].clientX;
+
+                option.touchTime = setTimeout(function () {
+                    drawTip(x);
+                    svg.touchmove(function (e) {
+                        e.preventDefault();
+                        var x = e.touches[0].clientX;
+                        drawTip(x);
+                    });
+                }, 100);
+
+                svg.touchmove(function (e) {
+                    clearTimeout(touchtime);
+                });
+
+            });
+
+            svg.touchend(function () {
+                svg.untouchmove();
+                fadeTip();
+                clearTimeout(touchtime);
+            });
+        }
 
         //画Tip
-        function drawTip(){}
+        function drawTip(){
+
+        }
+
         //清除Tip
-        function fadeTip(){}
+        function fadeTip(){
+
+        }
+
+
+
+        //返回数组中的最大值
+        function getMax(array){
+            return Math.max.apply(Math,array);
+        }
+
+        //比较两个数，返回较大值
+        function getLarger(a,b){
+            return a>b ? a:b;
+        }
 
         //this.opt = $.extend(true,{},defOpt,opt);
-        return false;
+        return true;
     };
 })();
 
