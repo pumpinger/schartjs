@@ -712,7 +712,6 @@
 
                 }
 
-                //在这里  打断 会快一点
 
 
 
@@ -882,7 +881,6 @@
 
                 circle.touchstart(function (e) {
                     circle.touchend(function (e) {
-                        circle.untouchend();
                         svgOption.onTouch(svgOption.data[0]);
                     });
                     //movePie(this, movex, movey, v, e);
@@ -963,7 +961,6 @@
 
                     pie.touchstart(function (e) {
                         pie.touchend(function (e) {
-                            pie.untouchend();
                             svgOption.onTouch(n);
                         });
                         //movePie(this, movex, movey, v, e);

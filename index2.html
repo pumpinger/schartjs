@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,28 +8,9 @@
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <script type="text/javascript" src="./js/require.js"></script>
-    <!--<script type="text/javascript" src="./js/jquery.min.js"></script>-->
-    <!--<script type="text/javascript" src="./js/snap.svg.js"></script>-->
-    <!--<script type="text/javascript" src="./js/schart.js"></script>-->
-    <script>
-        require.config({
-            baseUrl: "js",
-            paths: {
-                "jquery": "jquery.min",
-                "snap": "snap.svg",
-                "schart": "schart2"
-            },
-            shim: {
-                'schart2': {
-                    deps: ['snap', 'jquery'],
-                    exports: 'schart'
-                }
-            }
-        });
-        require(['jquery', 'snap', 'schart']);
-    </script>
-
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/snap.svg.js"></script>
+    <script type="text/javascript" src="./js/schart2.js"></script>
     <style>
         body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,button,input,textarea,th,td,p,span,font,div{padding:0;margin:0;word-wrap:break-word;-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-tap-highlight-color: transparent;}
         a{text-decoration:none;color: inherit;}
@@ -38,604 +20,1076 @@
         body {font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif;-webkit-text-size-adjust:none;color: #1b1b1b;-webkit-user-select:none;}
 
 
-        text {
-            /*text-anchor: middle;*/
-            /*pointer-events: auto; */
-        }
     </style>
 </head>
 <body>
-<?php echo 111;?>
-<!--<div style="font-size: 24px;position: absolute;text-align: center;width: 100%;" id="abtext">这里是筛选</div>-->
-
-<!--<svg id="svg1" viewBox="0 0 0 240">-->
-
-<!--<svg id="svg1" height="250px" width="100%" style="background-color: #2e83d6">-->
-
-<!--<svg id="svg1" height="400px" width="100%" viewBox="0 0 850 200" preserveAspectRatio="xMidYMid none">-->
-
-
-<svg id="svg1" height="300px" width="100%" >
-</svg>
-
-<svg id="svg3" height="300px" width="100%" >
-</svg>
-
-<svg id="svg4" height="300px" width="100%" >
-</svg>
-
-<svg id="svg5" height="300px" width="100%" >
-</svg>
-
-<svg id="svg6" height="300px" width="100%" >
-</svg>
-
-<svg id="svg7" height="300px" width="100%" >
-</svg>
-
-<svg id="svg8" height="300px" width="100%" >
-</svg>
-
-<svg id="svg9" height="300px" width="100%" >
-</svg>
-
-1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
-
-<div id='ccc' style="margin: 20px 0 0 0;position: static;">
-    <svg id="svg2" height="300px" width="100%" >
-
-    </svg>
-</div>
 
 
 
 
-<div class="glob" style="text-align: center;" id="2">
-    <button ontouchstart="fullScreen()">全屏</button>
-</div>
 
+
+
+
+<svg id="svgcolum" height="250px" width="100%" ></svg>
+
+<svg id="svgbar" height="250px" width="100%" ></svg>
+
+
+<svg id="svgline" height="250px" width="100%" ></svg>
+<svg id="svgpie" height="300px" width="100%" ></svg>
+
+
+
+
+
+<pre>
+el:"#svgcolum",
+tip:[
+    {
+        format:function(data){
+            return '本月'+data.name+'销量为'+data.items[0].num;
+        },
+        color:'#000000',
+        bg:'#000000'
+    }
+],
+avg:[
+    {
+        num:10,
+        format:function(){},
+        color:'',
+        bg:'',
+    }
+],
+style:{
+    valuePartition:5,           //bglin 区分几块    默认6
+    categoryWidth:55,            //一个组  有多宽  默认自动
+    nameColor:'#000000',     //名字的颜色    默认  黑色
+    nameWeight:100,     //纵图   名字的宽度限制   默认 80
+    nameHeight:40,      //横图    名字的宽度限制   默认 40
+    nameSize:12,      //名字的字体大小  默认12
+    dataOffset:10,     //同一组元素  他们的距离偏差   默认0
+    xAxis:'category',           //默认  category  category类目    time时间   value值
+    yAxis:'value',          //默认  value
+    tipHeight:30,               //tip 的高度
+    moveChart:true,          //能否滚动
+    items:[{
+        width:5,            //默认  line宽度3  bar 宽度 10
+        type:'line',            //默认  line宽度3  bar 宽度 10
+        color:''                //默认  蓝色
+        lineEnd:{               //line 图的 特殊样式
+            format:function(){},
+            color:''
+            bg:''
+        },
+        marker:{
+            format:function(){}
+        }
+    }]
+
+},
+data:[
+    {
+        name:"abcdefghijkl",
+        items:[
+            {
+                num:20
+            },
+            {
+                num:33
+            }
+        ]
+    }
+],
+onFinish:function(){
+},
+onBegin:function(){
+},
+onTouch:function(){
+},
+onTouchStart:function(){
+},
+onTouchEnd:function(){}
+
+
+
+
+</pre>
 
 
 </body>
 
 <script type="text/javascript">
-    var svgnodataurl='./js/stats_tips_nodate.png';
 
-    require(['jquery', 'snap', 'schart'], function ($, Snap, sChart){
+    document.oncontextmenu = function ()
+    {
+        return false
+    };
 
-        var option={
-            type:'ha',
-            is_full:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            svg:"#svg1",
-            data:[
-                {
-                    name:'北京',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                                {
-                                    num:33
-                                },
-                                {
-                                    num:33
-                                }
-                            ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:33
-                                },
-                                {
-                                    num:33
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'南京',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:33
-                        },
-                        {
-                            name:"朝阳2",
-                            num:33
-                        }
-                    ]
-                },
-                {
-                    name:'东京',
-                    items:[
-                        {
-                            num:33
-                        },
-                        {
-                            num:33
-                        }
-                    ]
-                },
-                {
-                    name:'西京',
-                    num:12
-                }
-            ],
-            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var option2={
-            type:'line',
-            isFull:false,
-            isHome:false,
-            isCompare:true,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            svg:"#svg3",
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                                {
-                                    num:2,
-                                },
-                                {
-                                    num:3
-                                }
-                            ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:4
-                                },
-                                {
-                                    num:5
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[
-                        {
-                            num:8
-                        },
-                        {
-                            num:9
-                        }
-                    ]
-                },
-                {
-                    name:'深圳',
-                    items:[
-                        {
-                            num:10
-                        },
-                        {
-                            num:11
-                        }
-                    ]
-                },
-                {
-                    name:'成东西方的都',
-                    items:[
-                        {
-                            num:12
-                        },
-                        {
-                            num:13
-                        }
-                    ]
-                }
-            ],
-            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var optionline={
-            type:'line',
-            svg:"#svg1",
-            isCompare:false,
-            isFull:false,
-            isHome:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            legend:[],
-            color:['#88BF57'],
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                                {
-                                    num:2
-                                },
-                                {
-                                    num:3
-                                }
-                            ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:4
-                                },
-                                {
-                                    num:5
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[
-                        {
-                            num:8
-                        },
-                        {
-                            num:9
-                        }
-                    ]
-                },
-                {
-                    name:'深圳',
-                    items:[
-                        {
-                            num:10
-                        },
-                        {
-                            num:11
-                        }
-                    ]
-                },
-                {
-                    name:'成东西方的都',
-                    items:[
-                        {
-                            num:12
-                        },
-                        {
-                            num:13
-                        }
-                    ]
-                }
-            ],
-            touchTime: 5,
-            tier: ['北','成东西方的都','深圳','上方的海','广方州'],
-            tierSn:[0,2,5,8,10,11],
-            name: ['北京', '成', '成都', '成', '成', '深圳', '成', '成', '上海', '成', '广州'],
-            value: [780, [222,33,44], 444, [320,234], 220, 150, 320, 620, 760, 150, 820],
-            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var optioncolumn={
-            type:'column',
-            svg:"#svg3",
-            isCompare:false,
-            isFull:false,
-            isHome:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            legend:[],
-            color:['#88BF57'],
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                            {
-                                num:2
-                            },
-                            {
-                                num:3
-                            }
-                        ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:4
-                                },
-                                {
-                                    num:5
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[
-                        {
-                            num:8
-                        },
-                        {
-                            num:9
-                        }
-                    ]
-                },
-                {
-                    name:'深圳',
-                    items:[
-                        {
-                            num:10
-                        },
-                        {
-                            num:11
-                        }
-                    ]
-                },
-                {
-                    name:'成东西方的都',
-                    items:[
-                        {
-                            num:12
-                        },
-                        {
-                            num:13
-                        }
-                    ]
-                }
-            ],
-            touchTime: 5,
-            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
-            value: [0, 320, 120, 150, 820],
-            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var optionbar={
-            type:'bar',
-            svg:"#svg3",
-            isCompare:false,
-            isFull:false,
-            isHome:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            legend:[],
-            color:['#88BF57'],
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            items:[
-                            {
-                                num:2
-                            },
-                            {
-                                num:3
-                            }
-                        ]
-                        },
-                        {
-                            name:"朝阳2",
-                            items:[
-                                {
-                                    num:4
-                                },
-                                {
-                                    num:5
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[
-                        {
-                            num:8
-                        },
-                        {
-                            num:9
-                        }
-                    ]
-                },
-                {
-                    name:'深圳',
-                    items:[
-                        {
-                            num:10
-                        },
-                        {
-                            num:11
-                        }
-                    ]
-                },
-                {
-                    name:'成东西方的都',
-                    items:[
-                        {
-                            num:12
-                        },
-                        {
-                            num:13
-                        }
-                    ]
-                }
-            ],
-            touchTime: 5,
-            tier: ['北','成东西方的都','深圳','上方的海','广方州'],
-            tierSn:[0,2,5,8,10,11],
-            name: ['北京', '成', '成都', '成', '成', '深圳', '成', '成', '上海', '成', '广州'],
-            value: [780, [222,33,44], 444, [320,234], 220, 150, 320, 620, 760, 150, 820],
-            noDataMsg: ['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        var option0000={
-            type:'column',
-            svg:"#svg4",
-            isCompare:false,
-            isFull:false,
-            isHome:false,
-            tip:false,
-            tipMsg:this.num+'Km',
-            marker:false,
-            markerMsg:this.num+'Km',
-            avg:false,
-            avgMsg:this.avg+'Km',
-            legend:[],
-            color:['#88BF57'],
-            data:[
-                {
-                    name:'北',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num: [2, 3]
-                        },
-                        {
-                            name:"朝阳2",
-                            num:[4,5]
-                        }
-                    ]
-                },
-                {
-                    name:'上方的海',
-                    items:[
-                        {
-                            name:"朝阳",
-                            num:6
-                        },
-                        {
-                            name:"朝阳2",
-                            num:7
-                        }
-                    ]
-                },
-                {
-                    name:'广方州',
-                    items:[8,9]
-                },
-                {
-                    name:'深圳',
-                    num:[10,11]
-                },
-                {
-                    name:'成东西方的都',
-                    num:[12,13]
-                },
-                {
-                    name:'南方的京',
-                    num:14
-                },
-                {
-                    name:'天方的津',
-                    num:14
-                }
-            ],
-            touchTime: 5,
-            tier: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
-            name: ['北', '成东西方的都', '深圳', '上方的海', '广方州'],
-            value: [0, 320, 120, 150, 820],
-            noDataMsg:['呵呵','嘻嘻哈哈嘿嘿'],
-            chartStr:"chart complete!"
-        };
-        function drawInfo(info){
-            console.log("callback:",info);
-        }
-        sChartDraw(optionline,drawInfo);
-        //sChartDraw(optioncolumn,drawInfo);
-        sChartDraw(optionbar,drawInfo);
 
-        var svgsnap = Snap("#svg6");
-        svgsnap.circle(50, 50, 40).attr({
-            fill: "#fc0",
-            stroke: "#000",
-            strokeWidth: 2,     // 驼峰命名...
-            "fill-opacity": 0.5 // 或者短横符连接名称
-        });
-    });
+    var option1={
+        el:"#svgcolum",
+        tip:[
+            {
+                format:function(data){
+                    return data.name;
+                } //1tip多个
+            },{
+                format:function(data){
+                    return '123';
+                } //1tip多个
+            }
+        ],
+        style:{
+//            type:['bar','bar'],  //line bar pie
+//            moveChart:true,          //能否滚动
+            dataOffset:0,
+            items:[
+                {
+                    type:'bar',
+                    lineEnd:{
+                        format:function(data){
+                            return data.items[0].num;
+                        },
+                        color:''
+                    }
+                }
+                ,
+                {
+                    type:'bar',
+                    color:'#f5a25c',
+                    marker:{
+                        format:function(data){
+                            return data.items[1].num;
+                        }
+                    }
+                }
+//                ,
+//                {
+//                    color:'#f5a25c',
+//                    type:'line'
+//                }
+
+            ],
+            xAxis:'value',
+            yAxis:'category'//category  //group  //time   //value
+
+
+//            xAxis:'value',
+//            yAxis:'category'//category  //group  //time   //value
+        },
+        data:[
+            {
+                name:"abcdefghasjkl",
+                items:[
+                    {
+                        num:20
+                    },
+                    {
+                        num:33
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳1",
+                items:[
+                    {
+                        num:34
+                    },
+                    {
+                        num:41
+                    }
+                ]
+            },
+            {
+                name:"朝阳2",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳4",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳5",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳6",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳7",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳8",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳9",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳10",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳11",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳12",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳14",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳15",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳16",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳17",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+
+
+            {
+                name:"朝阳18",
+                items:[
+                    {
+                        num:63
+                    },
+                    {
+                        num:50
+                    }
+                ]
+            }
+
+        ],
+        onFinish:function(){
+        },
+        onBegin:function(){
+        },
+        onTouch:function(data){
+            console.log(data);
+        },
+        onTouchEnd:function(){}
+    };
+    var option2={
+        el:"#svgbar",
+        tip:[
+            {
+                format:function(data){
+                    return data.name;
+                } //1tip多个
+            },{
+                format:function(data){
+                    return '123';
+                } //1tip多个
+            }
+        ],
+//        avg:[
+//            {
+//                num:10,
+//                format:function(data){
+//                    return '平均:'+data.num;
+//                }
+//            }
+//        ],
+        style:{
+//            type:['bar','bar'],  //line bar pie
+//            moveChart:true,          //能否滚动
+            dataOffset:0,
+            items:[
+                {
+                    type:'bar',
+                    lineEnd:{
+                        format:function(data){
+                            return data.items[0].num;
+                        },
+                        color:''
+                    }
+                }
+                ,
+                {
+                    type:'bar',
+                    color:'#f5a25c',
+                    marker:{
+                        format:function(data){
+                            return data.items[1].num;
+                        }
+                    }
+                }
+//                ,
+//                {
+//                    color:'#f5a25c',
+//                    type:'line'
+//                }
+
+            ],
+            xAxis:'category',
+            yAxis:'value'//category  //group  //time   //value
+
+
+//            xAxis:'value',
+//            yAxis:'category'//category  //group  //time   //value
+        },
+        data:[
+            {
+                name:"abcdefghasjkl",
+                items:[
+                    {
+                        num:20
+                    },
+                    {
+                        num:33
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳1",
+                items:[
+                    {
+                        num:34
+                    },
+                    {
+                        num:41
+                    }
+                ]
+            },
+            {
+                name:"朝阳2",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳4",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳5",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳6",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳7",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳8",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳9",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳10",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳11",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳12",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳14",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳15",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳16",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳17",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+
+
+            {
+                name:"朝阳18",
+                items:[
+                    {
+                        num:63
+                    },
+                    {
+                        num:50
+                    }
+                ]
+            }
+
+        ],
+        onFinish:function(){
+        },
+        onBegin:function(){
+        },
+        onTouch:function(data){
+            console.log(data);
+        },
+        onTouchEnd:function(){}
+    };
+    var option3={
+        el:"#svgline",
+        tip:[
+            {
+                format:function(data){
+                    return data.name;
+                } //1tip多个
+            },{
+                format:function(data){
+                    return '123';
+                } //1tip多个
+            }
+        ],
+//        avg:[
+//            {
+//                num:10,
+//                format:function(data){
+//                    return '平均:'+data.num;
+//                }
+//            }
+//        ],
+        style:{
+//            type:['bar','bar'],  //line bar pie
+//            moveChart:true,          //能否滚动
+            dataOffset:0,
+            items:[
+                {
+                    type:'line',
+                    lineEnd:{
+                        format:function(data){
+                            return data.items[0].num;
+                        },
+                        color:''
+                    }
+                }
+                ,
+                {
+                    type:'line',
+                    color:'#f5a25c',
+                    marker:{
+                        format:function(data){
+                            return data.items[1].num;
+                        }
+                    }
+                }
+//                ,
+//                {
+//                    color:'#f5a25c',
+//                    type:'line'
+//                }
+
+            ],
+            xAxis:'time',
+            yAxis:'value'//category  //group  //time   //value
+
+
+//            xAxis:'value',
+//            yAxis:'category'//category  //group  //time   //value
+        },
+        data:[
+            {
+                name:"abcdefghasjkl",
+                items:[
+                    {
+                        num:20
+                    },
+                    {
+                        num:33
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳1",
+                items:[
+                    {
+                        num:34
+                    },
+                    {
+                        num:41
+                    }
+                ]
+            },
+            {
+                name:"朝阳2",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳3",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳4",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳5",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳6",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳7",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳8",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+            {
+                name:"朝阳9",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳10",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳11",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳12",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳14",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳15",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳16",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳17",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+
+
+            {
+                name:"朝阳18",
+                items:[
+                    {
+                        num:63
+                    },
+                    {
+                        num:50
+                    }
+                ]
+            }
+
+        ],
+        onFinish:function(){
+        },
+        onBegin:function(){
+        },
+        onTouch:function(data){
+            console.log(data);
+        },
+        onTouchEnd:function(){}
+    };
+
+
+    var option4={
+        el:"#svgpie",
+        tip:[
+            {
+                format:function(data){
+                    return data.name;
+                } //1tip多个
+            },{
+                format:function(data){
+                    return '123';
+                } //1tip多个
+            }
+        ],
+//        avg:[
+//            {
+//                num:10,
+//                format:function(data){
+//                    return '平均:'+data.num;
+//                }
+//            }
+//        ],
+        style:{
+//            type:['bar','bar'],  //line bar pie
+//            moveChart:true,          //能否滚动
+            dataOffset:0,
+            items:[
+                {
+                    type:'pie',
+                    lineEnd:{
+                        format:function(data){
+                            return data.items[0].num;
+                        },
+                        color:''
+                    }
+                }
+
+//                ,
+//                {
+//                    color:'#f5a25c',
+//                    type:'line'
+//                }
+
+            ],
+
+
+//            xAxis:'value',
+//            yAxis:'category'//category  //group  //time   //value
+        },
+        data:[
+
+            {
+                name:"朝阳11",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+            {
+                name:"朝阳12",
+                items:[
+                    {
+                        num:60
+                    },
+                    {
+                        num:59
+                    }
+                ]
+            },
+
+            {
+                name:"朝阳14",
+                items:[
+                    {
+                        num:64
+                    },
+                    {
+                        num:51
+                    }
+                ]
+            },
+
+
+        ],
+        onFinish:function(){
+        },
+        onBegin:function(){
+        },
+        onTouch:function(data){
+            console.log(data);
+        },
+        onTouchEnd:function(){}
+    };
+
+
+
+    var  ccc=sChartDraw(option1);
+    sChartDraw(option2);
+    sChartDraw(option3);
+    sChartDraw(option4);
+
+
+
+
 </script>
 
 </html>
