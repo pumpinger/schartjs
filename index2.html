@@ -37,6 +37,7 @@
 
 
 <svg id="svgline" height="250px" width="100%" ></svg>
+
 <svg id="svgpie" height="300px" width="100%" ></svg>
 
 
@@ -106,9 +107,9 @@ onFinish:function(){
 },
 onBegin:function(){
 },
-onTouch:function(){
+onTouch:function(){    //点击数据
 },
-onTouchStart:function(){
+onTouchStart:function(){   //长按数据
 },
 onTouchEnd:function(){}
 
@@ -448,7 +449,7 @@ onTouchEnd:function(){}
                     color:'#f5a25c',
                     marker:{
                         format:function(data){
-                            return data.items[1].num;
+                            console.log(data.items);
                         }
                     }
                 }
@@ -490,172 +491,17 @@ onTouchEnd:function(){}
                     }
                 ]
             },
-            {
-                name:"朝阳2",
-                items:[
-                    {
-                        num:60
-                    },
-                    {
-                        num:59
-                    }
-                ]
-            },
-            {
-                name:"朝阳3",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳3",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳4",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳5",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳6",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳7",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳8",
-                items:[
-                    {
-                        num:60
-                    },
-                    {
-                        num:59
-                    }
-                ]
-            },
-            {
-                name:"朝阳9",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳10",
-                items:[
-                    {
-                        num:60
-                    },
-                    {
-                        num:59
-                    }
-                ]
-            },
 
-            {
-                name:"朝阳11",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳12",
-                items:[
-                    {
-                        num:60
-                    },
-                    {
-                        num:59
-                    }
-                ]
-            },
 
-            {
-                name:"朝阳14",
-                items:[
-                    {
-                        num:64
-                    },
-                    {
-                        num:51
-                    }
-                ]
-            },
-            {
-                name:"朝阳15",
-                items:[
-                    {
-                        num:60
-                    },
-                    {
-                        num:59
-                    }
-                ]
-            },
+
 
             {
                 name:"朝阳16",
                 items:[
                     {
                         num:64
-                    },
-                    {
-                        num:51
                     }
+
                 ]
             },
             {
@@ -665,8 +511,9 @@ onTouchEnd:function(){}
                         num:60
                     },
                     {
-                        num:59
+
                     }
+
                 ]
             },
 
@@ -735,7 +582,8 @@ onTouchEnd:function(){}
                     color:'#f5a25c',
                     marker:{
                         format:function(data){
-                            return data.items[1].num;
+                            console.log(data.items);
+//                            return data.items[1].num;
                         }
                     }
                 }
@@ -746,7 +594,8 @@ onTouchEnd:function(){}
 //                }
 
             ],
-            xAxis:'time',
+//            xAxis:'time',
+            xAxis:'category',
             yAxis:'value'//category  //group  //time   //value
 
 
@@ -757,12 +606,7 @@ onTouchEnd:function(){}
             {
                 name:"abcdefghasjkl",
                 items:[
-                    {
-                        num:20
-                    },
-                    {
-                        num:33
-                    }
+
                 ]
             },
 
@@ -959,17 +803,7 @@ onTouchEnd:function(){}
 
 
 
-            {
-                name:"朝阳18",
-                items:[
-                    {
-                        num:63
-                    },
-                    {
-                        num:50
-                    }
-                ]
-            }
+
 
         ],
         onFinish:function(){
@@ -979,7 +813,8 @@ onTouchEnd:function(){}
         onTouch:function(data){
             console.log(data);
         },
-        onTouchEnd:function(){}
+        onTouchEnd:function(){},
+        onTouchStart:function(){}
     };
 
 

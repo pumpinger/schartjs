@@ -19,7 +19,7 @@
 
 
         if(  !  svg ||  ! svgDom ){
-            console.error('无svg元素');
+            console.log('无svg元素');
             return false;
 
         }
@@ -34,13 +34,13 @@
 
         var svgOption =initSvgOption();//svg画图选项
 
-        if( ! svgOption.data.length){
-            console.error('无数据');
-            return false;
-        }
 
         var svgProperty =initSvgProperty();//svg画图参数
 
+        if( ! svgProperty.number){
+            console.log('无数据');
+            return false;
+        }
 
         svgOption.onBegin();
         //drawLoading();
@@ -104,23 +104,39 @@
             });
 
 
-            var rect = svg.rect(0, y - 20 - 13, 0, 17, 10, 10).attr({
-                fill: bg
-            });
-            var text = svg.text(0, y - 20, textStr).attr({
-                fill: color,
-                fontSize: 12
-            });
-            rect.attr({
-                x:  startX- text.getBBox().width - 15,
-                width: text.getBBox().width + 10
-            });
-            text.attr({
-                x: startX - text.getBBox().width - 10
-            });
+
+            if(textStr){
+
+                var rect = svg.rect(0, y - 20 - 13, 0, 17, 10, 10).attr({
+                    fill: bg
+                });
+
+                var text = svg.text(0, y - 20, textStr).attr({
+                    fill: '#ffffff',
+                    fontSize: 12
+                });
+
+                rect.attr({
+                    x:  startX- text.getBBox().width - 15,
+                    width: text.getBBox().width + 10
+                });
+
+                text.attr({
+                    x: startX - text.getBBox().width - 10
+                });
 
 
-            return [circle,rect,text];
+                return [circle,rect,text];
+
+            }else{
+                return [circle];
+
+            }
+
+
+
+
+
 
 
             //svgProperty.chartEl.add([circle,rect]);
@@ -172,10 +188,14 @@
 
                     //这里如果 绘图位置 不靠最边 就会有bug
 
+                    
+
+
                     pressData(index);
 
 
                     svg.touchmove(function (e) {
+
                         e.preventDefault();
 
 
@@ -202,8 +222,13 @@
                                 return false;
 
                             }
-                            index = Math.floor(offset / svgOption.style.categoryWidth);
+                            if( svgOption.style.xAxis  == 'time') {
+                                index = Math.round(offset / svgOption.style.categoryWidth);
 
+                            }else{
+                                index = Math.floor(offset / svgOption.style.categoryWidth);
+
+                            }
 
                         }
                         pressData(index);
@@ -217,6 +242,8 @@
                         svg.untouchend();
                         svg.untouchmove();
                         cancelpressData();
+                        svgOption.onTouchEnd();
+
 
 
                         svg.touchmove(function (e) {
@@ -303,18 +330,20 @@
 
             var data=getData(index);
 
+            if(data){
+                svgOption.onTouchStart();
 
+                if( svgOption.tip){
+                    var lastIndex = $('.svg_tip').attr('data-index');
 
-
-            if(data  &&  svgOption.tip){
-
-                var lastIndex = $('.svg_tip').attr('data-index');
-
-                if(index != lastIndex){
-                    drawTip(index,data);
+                    if(index != lastIndex){
+                        drawTip(index,data);
+                    }
                 }
 
             }
+
+
 
         }
 
@@ -535,6 +564,9 @@
         function drawOneTip(index,option,data,pointx,tip){
             var textstr=option.format(data);
 
+            if( !textstr  && textstr !== 0  && textstr !=='0'){
+                return false;
+            }
 
 
             var rect = svg.paper.rect(pointx, svgProperty.viewBox.top+index*(svgOption.style.tipHeight+5), 100,svgOption.style.tipHeight, 4).attr({
@@ -615,6 +647,50 @@
 
         }
 
+        function pickName(){
+            var show = [];
+            var per = svgProperty.number - 1;
+            var offset;   //几个为一段
+            var avg;  //分成几段
+
+            if (!per || !(per - 1)) {
+                avg = 1;
+            } else if (!(per % 5)) {
+                avg = 5;
+            } else if (!(per % 4)) {
+                avg = 4;
+            } else if (!(per % 3)) {
+                avg = 3;
+            } else if (!((per - 1) % 5)) {
+                avg = 5;
+            } else if (!((per - 1) % 4)) {
+                avg = 4;
+            } else if (!((per - 1) % 3)) {
+                avg = 3;
+            } else if (!(per % 2)) {
+                avg = 2;
+            } else if (!((per - 1) % 2)) {
+                avg = 2;
+            } else {
+                console.log('s:均分日期未成功');
+                return _err(svg, '数据异常');
+            }
+
+
+            offset = Math.floor(per / avg);
+            for (var i = 0; i < avg; i++) {
+                show.push(offset * i);
+            }
+            //如果不能均分  最后一段 多分配一个
+            var last = offset * avg;
+            if ((per % avg)) {
+                last++;
+            }
+            show.push(last);
+
+            return show;
+        }
+
         function drawName(){
 
 
@@ -623,14 +699,14 @@
                 return false;
             }
 
-            var margin;
-            if( svgOption.style.xAxis  == 'time') {
-                var pickIndex=0;
-                margin = (svgProperty.chart.right -svgProperty.chart.left)/5
-            }else{
-                margin = svgOption.style.categoryWidth;
+            var margin = svgOption.style.categoryWidth;
 
+
+
+            if( svgOption.style.xAxis  == 'time'){
+                var  arr=pickName(svgOption.data);
             }
+
 
             $.each(svgOption.data,function (i,n){
 
@@ -645,18 +721,17 @@
 
 
                     if( svgOption.style.xAxis  == 'time'){
-                        var x = (margin) * pickIndex;
+                        $.each(arr,function (i2,n2){
+                            if(i  == n2){
+                                var x = (margin) * i;
 
-
-
-                        if(Math.floor(svgOption.style.categoryWidth*i/margin)  == pickIndex){
-                            if(pickIndex  !=  4){
-                                drawText(n.name,x,y,margin-10,svgOption.style.nameHeight);
-
+                                drawText(n.name,x,y,(svgProperty.chart.right -svgProperty.chart.left)/arr.length,svgOption.style.nameHeight);
+                                return true;
                             }
-                            pickIndex++;
 
-                        }
+                        });
+
+
 
                     }else{
                         var x = (margin) * i;
@@ -700,11 +775,18 @@
                 }
                 nameOverMax+=name[i];
 
+                if( svgOption.style.xAxis  == 'time') {
+                    var text = svg.text(startX,startY, nameOverMax).attr({
+                        fill: '#b0b0b0',
+                        fontSize: svgOption.style.nameSize
+                    });
+                }else{
+                    var text = chartSvg.text(startX,startY, nameOverMax).attr({
+                        fill: '#b0b0b0',
+                        fontSize: svgOption.style.nameSize
+                    });
+                }
 
-                var text = chartSvg.text(startX,startY, nameOverMax).attr({
-                    fill: '#b0b0b0',
-                    fontSize: svgOption.style.nameSize
-                });
 
 
                 if(rectColor){
@@ -739,12 +821,19 @@
                         }
 
 
+                        if( svgOption.style.xAxis  == 'time') {
 
-                        text = chartSvg.text(startX, startY , nameMax).attr({
-                            fill: '#b0b0b0',
-                            fontSize: svgOption.style.nameSize
-                        });
-                        svgProperty.chartEl.add(text);
+                            text = svg.text(startX, startY, nameMax).attr({
+                                fill: '#b0b0b0',
+                                fontSize: svgOption.style.nameSize
+                            });
+                        }else{
+                            text = chartSvg.text(startX, startY, nameMax).attr({
+                                fill: '#b0b0b0',
+                                fontSize: svgOption.style.nameSize
+                            });
+                            svgProperty.chartEl.add(text);
+                        }
 
 
                         if(   text.getBBox().height   <   maxHeight ){
@@ -763,19 +852,22 @@
                             rect.remove();
                         }
                     }else{
-
                         if( isCenter !== false){
 
                             var x;
 
+
                             if( svgOption.style.xAxis  == 'time'){
+
                                 // x=startX - (text.getBBox().width/2);
                                 //因为图像没有做居中  name 也不用
                                 x=startX;
-                                if(x < 0){
-                                    x= 0;
+                                if(x <= 0){
+                                    x= 0 ;
                                 }else if( x > svgProperty.viewBox.right - text.getBBox().width){
-                                    x= svgProperty.viewBox.right - text.getBBox().width;
+                                    // x= svgProperty.viewBox.right - text.getBBox().width;
+
+                                    x= svgDom.width() - text.getBBox().width;
 
                                 }
                             }else{
@@ -801,7 +893,10 @@
 
                         }
 
-                        svgProperty.chartEl.add(text);
+                        if( svgOption.style.xAxis  != 'time') {
+
+                            svgProperty.chartEl.add(text);
+                        }
 
 
                     }
@@ -1107,6 +1202,10 @@
         }
 
         function drawLine(data,i){
+            if( data[0] === null){
+                return false;
+            }
+
             var width=svgOption.style.items[i].width;
             var color=svgOption.style.items[i].color;
 
@@ -1127,6 +1226,9 @@
 
             //图形宽度  间隔 宽度    对比 间隔宽度
             $.each(data,function (i,n){
+                if( n === null){
+                    return false;
+                }
 
                 x = margin * i   +offset;
 
@@ -1147,11 +1249,42 @@
 
                 datapath += command + ' ' + x + ' ' + y;
                 initpath += command + ' ' + x  + ' ' + svgProperty.chart.bottom;
+
+
+
+
+
+                //只有一条数据
+                if(data.length == 1 ){
+
+                    svgOption.style.items[i].lineEnd=false;
+
+                    //有没有 对比数据
+                    if(svgOption.style.items.length > 1  || data.length > 1 ){
+                        var elArr=drawLineEnd(x+5,y,false,color);
+                        svgProperty.chartEl.add(elArr);
+
+                    }else{
+                        x = svgProperty.chart.right;
+
+                        datapath += ' L ' + x + ' ' + y;
+
+                    }
+
+
+                }
             });
 
 
+
             // var initShandowPath = initpath + 'V' + svgProperty.chart.bottom + 'H' + (margin/2  +offset);
-            var shandowPath = datapath + 'V' + svgProperty.chart.bottom + 'H' + (margin/2  +offset);
+            if( svgOption.style.xAxis  == 'time'){
+                var shandowPath = datapath + 'V' + svgProperty.chart.bottom + 'H' + 0;
+
+            }else{
+                var shandowPath = datapath + 'V' + svgProperty.chart.bottom + 'H' + (margin/2  +offset);
+            }
+
             // var path = chartSvg.path(initShandowPath).attr({
             var path = chartSvg.path(shandowPath).attr({
                 stroke: 'none',
@@ -1366,6 +1499,8 @@
                 data:[],
                 onFinish:function(){},
                 onBegin:function(){},
+                onTouchStart:function(){},
+                onTouchEnd:function(){},
                 onTouch:function(){}
 
             };
@@ -1495,7 +1630,7 @@
                     svgProperty.toward='horizontal';
 
                 }else{
-                    console.error('坐标轴没有刻度轴');
+                    console.log('坐标轴没有刻度轴');
                     return false;
                 }
             }
@@ -1589,13 +1724,12 @@
 
                 svgProperty.number++;
                 $.each(svgOption.style.items,function (i3,n3){
-                    svgProperty.data['value'][i3][i]=0;
-
+                    svgProperty.data['value'][i3][i]=null;
                 });
 
                 $.each(n.items,function (i2,n2){
-                    if(!n2.num){
-                        n2.num =0;
+                    if(!n2.num  &&  n2.num !='0'  &&  n2.num !=0 ){
+                        n2.num =null;
                     }
 
                     if(svgProperty.data['value'][i2]){
@@ -1606,7 +1740,9 @@
                         }else{
                             //单级
                             svgProperty.data['value'][i2][i]=n2.num;
-                            allData.push(n2.num);
+                            if(n2.num){
+                                allData.push(n2.num);
+                            }
 
 
                         }
@@ -1618,20 +1754,40 @@
             });
 
 
+
             if( svgOption.style.xAxis  == 'time'){
 
 
-                svgOption.style.categoryWidth=(svgProperty.chart.right-svgProperty.chart.left)/(svgProperty.data['value'][0].length-1);
+                if(  svgProperty.number  == 1){
+                    svgOption.style.categoryWidth=svgProperty.chart.right-svgProperty.chart.left
+                }else{
+                    svgOption.style.categoryWidth=(svgProperty.chart.right-svgProperty.chart.left)/(svgProperty.number-1);
+                }
+
+
+
             }
 
 
-            svgProperty.max=Math.max.apply(Math,allData);
-            svgProperty.sum=eval(allData.join('+'));
-            svgProperty.min=Math.min.apply(Math,allData);
-            svgProperty.perBgValue=getPerBgValue(svgProperty.max);
+
+            if(allData.length){
+                svgProperty.max=Math.max.apply(Math,allData);
+                svgProperty.sum=eval(allData.join('+'));
+                svgProperty.min=Math.min.apply(Math,allData);
+
+                svgProperty.perBgValue=getPerBgValue(svgProperty.max);
+            }else{
+                svgProperty.max=0;
+                svgProperty.sum=0;
+                svgProperty.min=0;
+
+                svgProperty.perBgValue=1;
 
 
+            }
 
+
+            console.log(svgProperty.perBgValue);
 
 
 
