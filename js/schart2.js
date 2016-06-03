@@ -1787,10 +1787,6 @@
             }
 
 
-            console.log(svgProperty.perBgValue);
-
-
-
 
 
 
