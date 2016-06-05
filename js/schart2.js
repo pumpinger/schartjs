@@ -188,7 +188,7 @@
 
                     //这里如果 绘图位置 不靠最边 就会有bug
 
-                    
+
 
 
                     pressData(index);
@@ -204,7 +204,7 @@
                             offset = touchy+$(document).scrollTop() - $(svg.node).offset().top - svgProperty.chart.marginTop- svgProperty.chart.beforeOffset;   //  点击的元素的高度
 
 
-                            if(offset  <  svgProperty.chart.top  || offset  >  svgProperty.chart.bottom){
+                            if(offset  <  svgProperty.chart.top  || offset  >  svgProperty.chart.bottom- svgProperty.chart.beforeOffset){
                                 return false;
 
                             }
@@ -218,7 +218,7 @@
                             offset = touchx-svgProperty.chart.marginLeft-svgProperty.chart.beforeOffset;
 
 
-                            if(offset  <  svgProperty.chart.left  || offset  >  svgProperty.chart.right){
+                            if(offset  <  svgProperty.chart.left  || offset  >  svgProperty.chart.right - svgProperty.chart.beforeOffset){
                                 return false;
 
                             }
@@ -806,13 +806,13 @@
 
 
                     text.attr({
-                        y:startY+(maxHeight-text.getBBox().height)/2
+                        y:startY+(maxHeight-$(text.node).height())/2
                     });
                 }
 
 
 
-                if(text.getBBox().width   >   maxWeight ){
+                if($(text.node).width()  >   maxWeight ){
 
                     if(nameMax  !== ''){
                         text.remove();
@@ -838,8 +838,8 @@
                         }
 
 
-                        if(   text.getBBox().height   <   maxHeight ){
-                            drawText(name.substring(i),startX,text.getBBox().height+startY,maxWeight,maxHeight-text.getBBox().height);
+                        if(   $(text.node).height()   <   maxHeight ){
+                            drawText(name.substring(i),startX,$(text.node).height()+startY,maxWeight,maxHeight-$(text.node).height());
 
                         }
                     }
@@ -866,15 +866,15 @@
                                 x=startX;
                                 if(x <= 0){
                                     x= 0 ;
-                                }else if( x > svgProperty.viewBox.right - text.getBBox().width){
+                                }else if( x > svgProperty.viewBox.right - $(text.node).width()){
                                     // x= svgProperty.viewBox.right - text.getBBox().width;
 
-                                    x= svgDom.width() - text.getBBox().width;
+                                    x= svgDom.width() - $(text.node).width();
 
                                 }
                             }else{
 
-                                x=startX+(maxWeight-text.getBBox().width)/2;
+                                x=startX+(maxWeight-$(text.node).width())/2;
 
                             }
 
