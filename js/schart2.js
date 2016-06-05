@@ -496,10 +496,12 @@
             var tipLine = drawTipLine(pointx,pointy);
             tip.add( tipLine);
 
-
-
+            var user_index=0;
             $.each(svgOption.tip,function(i,n){
-                drawOneTip(i,n,data,pointx,tip);
+                var  isDraw=drawOneTip(user_index,n,data,pointx,tip);
+                if(isDraw !== false){
+                    user_index++;
+                }
             });
 
 
@@ -1261,8 +1263,8 @@
 
                     //有没有 对比数据
                     if(svgOption.style.items.length > 1  || data.length > 1 ){
-                        var elArr=drawLineEnd(x+5,y,false,color);
-                        svgProperty.chartEl.add(elArr);
+                        drawLineEnd(x+svgProperty.viewBox.left,y,false,color);
+                        // svgProperty.chartEl.add(elArr);
 
                     }else{
                         x = svgProperty.chart.right;
@@ -1651,7 +1653,7 @@
 
 
                 if(svgOption.tip){
-                    svgProperty.chart.marginTop+=svgOption.tip.length*(5+svgOption.style.tipHeight);
+                    svgProperty.chart.marginTop=svgOption.tip.length*(5+svgOption.style.tipHeight);
                 }
 
 
@@ -1669,10 +1671,12 @@
 
                 if(svgOption.tip){
                     svgProperty.chart.top+=svgOption.tip.length*(5+svgOption.style.tipHeight);
+                }else{
+                    svgProperty.chart.top+=10;
+
                 }
 
 
-                svgProperty.chart.top+=10;
                 svgProperty.chart.bottom-=svgOption.style.nameHeight;
 
 

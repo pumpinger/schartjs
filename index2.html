@@ -550,7 +550,10 @@ onTouchEnd:function(){}
                 } //1tip多个
             },{
                 format:function(data){
-                    return '123';
+                    if(data.items[1]){
+                        return data.items[1].num;
+
+                    }
                 } //1tip多个
             }
         ],
@@ -603,13 +606,6 @@ onTouchEnd:function(){}
 //            yAxis:'category'//category  //group  //time   //value
         },
         data:[
-            {
-                name:"abcdefghasjkl",
-                items:[
-
-                ]
-            },
-
             {
                 name:"朝阳1",
                 items:[
@@ -670,10 +666,8 @@ onTouchEnd:function(){}
                 items:[
                     {
                         num:64
-                    },
-                    {
-                        num:51
                     }
+
                 ]
             },
             {
