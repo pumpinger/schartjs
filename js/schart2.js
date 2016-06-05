@@ -117,12 +117,12 @@
                 });
 
                 rect.attr({
-                    x:  startX- text.getBBox().width - 15,
-                    width: text.getBBox().width + 10
+                    x:  startX- $(text.node).width() - 15,
+                    width: $(text.node).width() + 10
                 });
 
                 text.attr({
-                    x: startX - text.getBBox().width - 10
+                    x: startX - $(text.node).width() - 10
                 });
 
 
@@ -583,7 +583,7 @@
 
 
 
-            var textw = text.getBBox().width;
+            var textw = $(text.node).width();
             var rectw = textw + 20;
             var rectleft = pointx - rectw / 2;
 
@@ -861,13 +861,13 @@
 
                             if( svgOption.style.xAxis  == 'time'){
 
-                                // x=startX - (text.getBBox().width/2);
+                                // x=startX - ($(text.node).width()/2);
                                 //因为图像没有做居中  name 也不用
                                 x=startX;
                                 if(x <= 0){
                                     x= 0 ;
                                 }else if( x > svgProperty.viewBox.right - $(text.node).width()){
-                                    // x= svgProperty.viewBox.right - text.getBBox().width;
+                                    // x= svgProperty.viewBox.right - $(text.node).width();
 
                                     x= svgDom.width() - $(text.node).width();
 
@@ -1353,7 +1353,7 @@
                         fontSize: 10
                     });
 
-                    text.attr('x', w - text.getBBox().width / 2);
+                    text.attr('x', w - $(text.node).width() / 2);
 
                 }
 
