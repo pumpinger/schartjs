@@ -963,7 +963,7 @@
             aimy[0] = py-pr;
 
 
-            drawText('点击各项查看详情',px-pr,py+pr,2*pr-20,60);
+            drawText('点击各项查看详情',px-pr-svgProperty.viewBox.left,py+pr,2*pr,60);
 
 
 
